@@ -1,9 +1,9 @@
 {
   "schemaVersion": 1,
-  "id": "cobblemontemplate",
+  "id": "hunt",
   "version": "${version}",
 
-  "name": "CobblemonTemplate",
+  "name": "Hunt",
   "description": "",
   "authors": [],
   "contact": {},
@@ -14,7 +14,7 @@
   "environment": "*",
   "entrypoints": {
     "main": [
-      "org.pokesplash.cobblemontemplate.fabric.CobblemonTemplateFabric"
+      "org.pokesplash.hunt.fabric.HuntFabric"
     ]
   },
   "depends": {

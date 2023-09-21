@@ -1,4 +1,4 @@
-package org.pokesplash.cobblemontemplate.util;
+package org.pokesplash.hunt.util;
 
 import com.cobblemon.mod.common.api.permission.CobblemonPermission;
 import com.mojang.brigadier.CommandDispatcher;
@@ -6,7 +6,7 @@ import com.mojang.brigadier.context.CommandContext;
 import com.mojang.brigadier.tree.LiteralCommandNode;
 import net.minecraft.commands.CommandSourceStack;
 import net.minecraft.commands.Commands;
-import org.pokesplash.cobblemontemplate.CobblemonTemplate;
+import org.pokesplash.hunt.Hunt;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -60,7 +60,7 @@ public abstract class BaseCommand {
 				.literal(commandString)
 				.requires(ctx -> {
 					if (ctx.isPlayer()) {
-						return CobblemonTemplate.permissions.hasPermission(ctx.getPlayer(),
+						return Hunt.permissions.hasPermission(ctx.getPlayer(),
 								permission);
 					} else {
 						return true;

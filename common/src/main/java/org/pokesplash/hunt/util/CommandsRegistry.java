@@ -1,4 +1,4 @@
-package org.pokesplash.cobblemontemplate.util;
+package org.pokesplash.hunt.util;
 
 import com.mojang.brigadier.CommandDispatcher;
 import net.minecraft.commands.CommandBuildContext;

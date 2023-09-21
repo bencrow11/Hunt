@@ -1,4 +1,4 @@
-package org.pokesplash.cobblemontemplate.command.basecommand;
+package org.pokesplash.hunt.command.basecommand;
 
 import ca.landonjw.gooeylibs2.api.UIManager;
 import ca.landonjw.gooeylibs2.api.button.Button;
@@ -13,9 +13,9 @@ import net.minecraft.commands.CommandSourceStack;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
-import org.pokesplash.cobblemontemplate.CobblemonTemplate;
-import org.pokesplash.cobblemontemplate.command.subcommand.ExampleSubcommand;
-import org.pokesplash.cobblemontemplate.util.BaseCommand;
+import org.pokesplash.hunt.Hunt;
+import org.pokesplash.hunt.command.subcommand.ExampleSubcommand;
+import org.pokesplash.hunt.util.BaseCommand;
 
 import java.util.Arrays;
 
@@ -30,7 +30,7 @@ public class ExampleCommand extends BaseCommand {
 	public ExampleCommand() {
 		// Super needs the command, a list of aliases, permission and array of subcommands.
 		super("examplecommand", Arrays.asList("examplecommandalias"),
-				CobblemonTemplate.permissions.getPermission("ExamplePermission"), Arrays.asList(new ExampleSubcommand()));
+				Hunt.permissions.getPermission("ExamplePermission"), Arrays.asList(new ExampleSubcommand()));
 	}
 
 	// Runs when the base command is run with no subcommands.

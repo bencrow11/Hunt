@@ -1,4 +1,4 @@
-package org.pokesplash.cobblemontemplate.command.subcommand;
+package org.pokesplash.hunt.command.subcommand;
 
 import com.mojang.brigadier.arguments.StringArgumentType;
 import com.mojang.brigadier.context.CommandContext;
@@ -6,8 +6,8 @@ import com.mojang.brigadier.tree.LiteralCommandNode;
 import net.minecraft.commands.CommandSourceStack;
 import net.minecraft.commands.Commands;
 import net.minecraft.network.chat.Component;
-import org.pokesplash.cobblemontemplate.util.Subcommand;
-import org.pokesplash.cobblemontemplate.util.Utils;
+import org.pokesplash.hunt.util.Subcommand;
+import org.pokesplash.hunt.util.Utils;
 
 public class ExampleSubcommand extends Subcommand {
 

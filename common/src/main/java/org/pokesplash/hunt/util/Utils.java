@@ -1,10 +1,10 @@
-package org.pokesplash.cobblemontemplate.util;
+package org.pokesplash.hunt.util;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-import org.pokesplash.cobblemontemplate.CobblemonTemplate;
+import org.pokesplash.hunt.Hunt;
 
 import java.io.*;
 import java.nio.ByteBuffer;
@@ -67,12 +67,12 @@ public abstract class Utils {
 
 				@Override
 				public void failed(Throwable exc, ByteBuffer attachment) {
-					logger.fatal("Unable to write to file for " + CobblemonTemplate.MOD_ID);
+					logger.fatal("Unable to write to file for " + Hunt.MOD_ID);
 					future.complete(false);
 				}
 			});
 		} catch (IOException | SecurityException e) {
-			logger.fatal("Unable to write to file for " + CobblemonTemplate.MOD_ID);
+			logger.fatal("Unable to write to file for " + Hunt.MOD_ID);
 			future.complete(false);
 		}
 
@@ -117,11 +117,11 @@ public abstract class Utils {
 			executor.shutdown();
 			future.complete(true);
 		} catch (IOException e) {
-			logger.fatal("Unable to read file " + filename + " for " + CobblemonTemplate.MOD_ID);
+			logger.fatal("Unable to read file " + filename + " for " + Hunt.MOD_ID);
 			executor.shutdown();
 			future.completeExceptionally(e);
 		} catch (Exception e) {
-			logger.fatal("Unable to read file " + filename + " for " + CobblemonTemplate.MOD_ID);
+			logger.fatal("Unable to read file " + filename + " for " + Hunt.MOD_ID);
 			executor.shutdown();
 			future.completeExceptionally(e);
 		}

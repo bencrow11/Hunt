@@ -1,13 +1,13 @@
-package org.pokesplash.cobblemontemplate;
+package org.pokesplash.hunt;
 
 import dev.architectury.event.events.common.CommandRegistrationEvent;
-import org.pokesplash.cobblemontemplate.command.basecommand.ExampleCommand;
-import org.pokesplash.cobblemontemplate.util.CommandsRegistry;
-import org.pokesplash.cobblemontemplate.util.Permissions;
+import org.pokesplash.hunt.command.basecommand.ExampleCommand;
+import org.pokesplash.hunt.util.CommandsRegistry;
+import org.pokesplash.hunt.util.Permissions;
 
-public class CobblemonTemplate
+public class Hunt
 {
-	public static final String MOD_ID = "cobblemontemplate";
+	public static final String MOD_ID = "hunt";
 
 	public static final Permissions permissions = new Permissions();
 

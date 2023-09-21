@@ -1,4 +1,4 @@
-package org.pokesplash.cobblemontemplate.util;
+package org.pokesplash.hunt.util;
 
 import com.cobblemon.mod.common.Cobblemon;
 import com.cobblemon.mod.common.api.permission.CobblemonPermission;

@@ -1,4 +1,4 @@
-package org.pokesplash.cobblemontemplate.util;
+package org.pokesplash.hunt.util;
 
 import com.mojang.brigadier.context.CommandContext;
 import com.mojang.brigadier.tree.LiteralCommandNode;
