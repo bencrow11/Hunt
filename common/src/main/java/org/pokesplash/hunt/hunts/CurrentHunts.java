@@ -20,6 +20,9 @@ public class CurrentHunts {
 	 * Initializes hashmap with hunts.
 	 */
 	public void init() {
+		for (UUID hunt : hunts.keySet()) {
+			removeHunt(hunt);
+		} // TODO this causes an error with the reload command.
 		for (int x=0; x < Hunt.config.getHuntAmount(); x++) {
 			addHunt();
 		}

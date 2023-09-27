@@ -121,7 +121,7 @@ public class SingleHunt {
 
 		// Checks for ability, if enabled.
 		if (Hunt.config.getMatchProperties().isAbility()) {
-			if (!pokemon.getAbility().getDisplayName().equalsIgnoreCase(this.pokemon.getAbility().getName())) {
+			if (!pokemon.getAbility().getName().equalsIgnoreCase(this.pokemon.getAbility().getName())) {
 				return false;
 			}
 		}

@@ -21,6 +21,7 @@ import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 import org.pokesplash.hunt.Hunt;
+import org.pokesplash.hunt.command.subcommand.DebugCommand;
 import org.pokesplash.hunt.command.subcommand.ReloadCommand;
 import org.pokesplash.hunt.hunts.SingleHunt;
 import org.pokesplash.hunt.util.BaseCommand;
@@ -49,6 +50,7 @@ public class HuntCommand extends BaseCommand {
 
 		if (!context.getSource().isPlayer()) {
 			context.getSource().sendSystemMessage(Component.literal("A player must run this command!"));
+			return 1;
 		}
 
 		ServerPlayer sender = context.getSource().getPlayer();
@@ -84,7 +86,7 @@ public class HuntCommand extends BaseCommand {
 							" - " + hunt.getPokemon().getForm().getName());
 
 			GooeyButton button = GooeyButton.builder()
-					.display(Utils.parseItemId(Hunt.language.getFillerMaterial()))
+					.display(PokemonItem.from(hunt.getPokemon(), 1))
 					.title(isShiny ? "§e" + title : "§b" + title)
 					.lore(lore)
 					.build();
@@ -93,7 +95,7 @@ public class HuntCommand extends BaseCommand {
 		}
 
 		Button filler = GooeyButton.builder()
-				.display(new ItemStack(Items.DIAMOND, 1))
+				.display(Utils.parseItemId(Hunt.language.getFillerMaterial()))
 				.hideFlags(FlagType.All)
 				.lore(new ArrayList<>())
 				.title("")
