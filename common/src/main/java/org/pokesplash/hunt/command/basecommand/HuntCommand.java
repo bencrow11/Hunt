@@ -55,6 +55,11 @@ public class HuntCommand extends BaseCommand {
 
 		ServerPlayer sender = context.getSource().getPlayer();
 
+		/**
+		 *  Creates the UI
+		 */
+
+
 		List<Button> hunts = new ArrayList<>();
 		for (SingleHunt hunt : Hunt.hunts.getHunts().values()) {
 			Collection<String> lore = new ArrayList<>();

@@ -6,10 +6,13 @@ import org.pokesplash.hunt.util.Utils;
 
 import java.util.concurrent.CompletableFuture;
 
+/**
+ * Class for customization of language.
+ */
 public class Lang {
-	private String title;
-	private String fillerMaterial;
-	private String reloadMessage;
+	private String title; // Title of the menu
+	private String fillerMaterial; // The material used as the border in the UI.
+	private String reloadMessage; // Reload message.
 
 	public Lang() {
 		title = "Hunt";
@@ -27,6 +30,9 @@ public class Lang {
 		return reloadMessage;
 	}
 
+	/**
+	 * Reads or creates the lang file.
+	 */
 	public void init() {
 		CompletableFuture<Boolean> futureRead = Utils.readFileAsync("/config/hunt/", "lang.json",
 				el -> {

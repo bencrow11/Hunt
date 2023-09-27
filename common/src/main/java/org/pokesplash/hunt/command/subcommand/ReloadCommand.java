@@ -11,6 +11,8 @@ import org.pokesplash.hunt.util.Subcommand;
 import org.pokesplash.hunt.util.Utils;
 
 import javax.imageio.plugins.tiff.GeoTIFFTagSet;
+import java.util.ArrayList;
+import java.util.UUID;
 
 public class ReloadCommand extends Subcommand {
 
@@ -44,6 +46,12 @@ public class ReloadCommand extends Subcommand {
 	 */
 	@Override
 	public int run(CommandContext<CommandSourceStack> context) {
+
+		// Removes current hunts, the case the config size changes.
+		ArrayList<UUID> uuids = new ArrayList<>(Hunt.hunts.getHunts().keySet());
+		for (UUID hunt : uuids) {
+			Hunt.hunts.removeHunt(hunt);
+		}
 
 		Hunt.load();
 

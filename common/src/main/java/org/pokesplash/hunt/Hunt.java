@@ -1,6 +1,7 @@
 package org.pokesplash.hunt;
 
 import com.cobblemon.mod.common.Cobblemon;
+import dev.architectury.event.Event;
 import dev.architectury.event.events.common.CommandRegistrationEvent;
 import dev.architectury.event.events.common.LifecycleEvent;
 import org.apache.logging.log4j.LogManager;
@@ -8,11 +9,16 @@ import org.apache.logging.log4j.Logger;
 import org.pokesplash.hunt.command.basecommand.HuntCommand;
 import org.pokesplash.hunt.config.Config;
 import org.pokesplash.hunt.config.Lang;
+import org.pokesplash.hunt.event.EventHandler;
 import org.pokesplash.hunt.hunts.CurrentHunts;
 import org.pokesplash.hunt.hunts.SingleHunt;
 import org.pokesplash.hunt.util.CommandsRegistry;
 import org.pokesplash.hunt.util.Permissions;
 import org.pokesplash.hunt.hunts.SpawnRates;
+
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.UUID;
 
 public class Hunt
 {
@@ -30,10 +36,13 @@ public class Hunt
 		CommandsRegistry.addCommand(new HuntCommand());
 		// Registry registers all commands
 		CommandRegistrationEvent.EVENT.register(CommandsRegistry::registerCommands);
+		EventHandler.registerEvents();
 
 		LifecycleEvent.SERVER_STARTED.register((t) -> {
 			load();
 		});
+
+
 
 		// Removes all hunts and cancels timers when server is stopping.
 		LifecycleEvent.SERVER_STOPPING.register((t) -> {
