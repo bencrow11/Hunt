@@ -6,13 +6,16 @@ import com.mojang.brigadier.tree.LiteralCommandNode;
 import net.minecraft.commands.CommandSourceStack;
 import net.minecraft.commands.Commands;
 import net.minecraft.network.chat.Component;
+import org.pokesplash.hunt.Hunt;
 import org.pokesplash.hunt.util.Subcommand;
 import org.pokesplash.hunt.util.Utils;
 
-public class ExampleSubcommand extends Subcommand {
+import javax.imageio.plugins.tiff.GeoTIFFTagSet;
 
-	public ExampleSubcommand() {
-		super("This is the subcommand usage.");
+public class ReloadCommand extends Subcommand {
+
+	public ReloadCommand() {
+		super("§9Usage:\\n§3- hunt reload");
 	}
 
 	/**
@@ -21,16 +24,16 @@ public class ExampleSubcommand extends Subcommand {
 	 */
 	@Override
 	public LiteralCommandNode<CommandSourceStack> build() {
-		return Commands.literal("sub")
-				.executes(this::showUsage)
-				.then(Commands.argument("player", StringArgumentType.string())
-						.suggests((ctx, builder) -> {
-							for (String name : ctx.getSource().getOnlinePlayerNames()) {
-								builder.suggest(name);
-							}
-							return builder.buildFuture();
-						})
-						.executes(this::run))
+		return Commands.literal("reload")
+				.requires(ctx -> {
+					if (ctx.isPlayer()) {
+						return Hunt.permissions.hasPermission(ctx.getPlayer(),
+								Hunt.permissions.getPermission("HuntReload"));
+					} else {
+						return true;
+					}
+				})
+				.executes(this::run)
 				.build();
 	}
 
@@ -42,7 +45,10 @@ public class ExampleSubcommand extends Subcommand {
 	@Override
 	public int run(CommandContext<CommandSourceStack> context) {
 
-		context.getSource().sendSystemMessage(Component.literal(Utils.formatMessage("subcommand ran!",
+		Hunt.load();
+
+		context.getSource().sendSystemMessage(Component.literal(Utils.formatMessage(
+				Hunt.language.getReloadMessage(),
 				context.getSource().isPlayer())));
 
 		return 1;

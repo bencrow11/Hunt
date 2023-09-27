@@ -4,6 +4,7 @@ import com.cobblemon.mod.common.api.spawning.CobblemonSpawnPools;
 import com.cobblemon.mod.common.api.spawning.detail.SpawnDetail;
 import com.cobblemon.mod.common.pokemon.Pokemon;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
@@ -20,7 +21,7 @@ public class SpawnRates {
 	}
 
 	public void init() {
-		List<SpawnDetail> spawnDetails = CobblemonSpawnPools.WORLD_SPAWN_POOL.getDetails();
+		ArrayList<SpawnDetail> spawnDetails = new ArrayList<>(CobblemonSpawnPools.WORLD_SPAWN_POOL.getDetails());
 		// Checks for highest value for each key and adds the key with the highest weight.
 		for (SpawnDetail detail : spawnDetails ) {
 			if (rarity.containsKey(detail.getName().getString())) {

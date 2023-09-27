@@ -47,7 +47,13 @@ public class Config {
 					Gson gson = Utils.newGson();
 					Config cfg = gson.fromJson(el, Config.class);
 					huntDuration = cfg.getHuntDuration();
-					huntAmount = cfg.getHuntAmount();
+
+					if (cfg.getHuntAmount() > 28) {
+						huntAmount = 28;
+						Hunt.LOGGER.error("Hunt amount can not be higher than 28");
+					} else {
+						huntAmount = cfg.getHuntAmount();
+					}
 					commonPokemonRarity = cfg.getCommonPokemonRarity();
 					uncommonPokemonRarity = cfg.getUncommonPokemonRarity();
 					rarePokemonRarity = cfg.getRarePokemonRarity();

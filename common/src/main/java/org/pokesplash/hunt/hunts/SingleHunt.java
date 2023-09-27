@@ -1,13 +1,15 @@
 package org.pokesplash.hunt.hunts;
 
+import com.cobblemon.mod.common.api.Priority;
+import com.cobblemon.mod.common.api.abilities.PotentialAbility;
+import com.cobblemon.mod.common.pokemon.FormData;
+import com.cobblemon.mod.common.pokemon.Gender;
 import com.cobblemon.mod.common.pokemon.Pokemon;
 import org.pokesplash.hunt.Hunt;
 import org.pokesplash.hunt.config.CustomPrice;
 
-import java.util.List;
-import java.util.Timer;
-import java.util.TimerTask;
-import java.util.UUID;
+import java.util.*;
+import java.util.concurrent.ThreadLocalRandom;
 
 public class SingleHunt {
 
@@ -15,6 +17,8 @@ public class SingleHunt {
 	private double price; // hunt prize amount.
 	private Pokemon pokemon; // Pokemon being hunted.
 	private final Timer timer; // Timer for hunt.
+	private final long endtime; // The end date for the hunt.
+//	private final String nature;
 
 	public SingleHunt() {
 		// Creates unique ID and generates random pokemon.
@@ -62,6 +66,8 @@ public class SingleHunt {
 				price = Hunt.config.getUltraRarePokemonPrice();
 			}
 		}
+		pokemon.checkAbility();
+		pokemon.checkGender();
 
 		// Creates the timer to replace the hunt once it is over.
 		int duration = Hunt.config.getHuntDuration() * 60 * 1000;
@@ -72,6 +78,9 @@ public class SingleHunt {
 				Hunt.hunts.replaceHunt(id);
 			}
 		}, duration);
+
+		// Adds the endtime as the current time + the duration.
+		endtime = new Date().getTime() + duration;
 	}
 
 	/**
@@ -93,6 +102,9 @@ public class SingleHunt {
 	public Timer getTimer() {
 		return timer;
 	}
+	public long getEndtime() {
+		return endtime;
+	}
 
 	/**
 	 * Checks that a given pokemon matches the one in the listing.
@@ -109,21 +121,21 @@ public class SingleHunt {
 
 		// Checks for ability, if enabled.
 		if (Hunt.config.getMatchProperties().isAbility()) {
-			if (!pokemon.getAbility().getDisplayName().equalsIgnoreCase(this.pokemon.getAbility().getDisplayName())) {
+			if (!pokemon.getAbility().getDisplayName().equalsIgnoreCase(this.pokemon.getAbility().getName())) {
 				return false;
 			}
 		}
 
 		// Checks gender, if enabled.
 		if (Hunt.config.getMatchProperties().isGender()) {
-			if (!pokemon.getGender().equals(this.pokemon.getGender())) {
+			if (!pokemon.getGender().name().equalsIgnoreCase(this.pokemon.getGender().name())) {
 				return false;
 			}
 		}
 
 		// Checks nature, if enabled.
 		if (Hunt.config.getMatchProperties().isNature()) {
-			if (!pokemon.getNature().getDisplayName().equalsIgnoreCase(this.pokemon.getNature().getDisplayName())) {
+			if (!pokemon.getNature().getName().getPath().equalsIgnoreCase(this.pokemon.getNature().getName().getPath())) {
 				return false;
 			}
 		}

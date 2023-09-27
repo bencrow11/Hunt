@@ -20,7 +20,9 @@ public class Permissions {
 	public Permissions() {
 		permissions = new HashMap<>();
 		// Add you permissions here.
-		createPermission("ExamplePermission", "template.command.example", 1);
+		createPermission("HuntBase", "hunt.base", 1);
+		createPermission("HuntReload", "hunt.reload", 2);
+		createPermission("HuntDebug", "hunt.debug", 2);
 	}
 
 	/**
