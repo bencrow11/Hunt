@@ -146,7 +146,7 @@ public abstract class Utils {
 	 * Method to create a new gson builder.
 	 * @return Gson instance.
 	 */
-	private static Gson newGson() {
+	public static Gson newGson() {
 		return new GsonBuilder().setPrettyPrinting().create();
 	}
 

@@ -1,13 +1,18 @@
-package org.pokesplash.hunt;
+package org.pokesplash.hunt.hunts;
 
 import com.cobblemon.mod.common.api.spawning.CobblemonSpawnPools;
 import com.cobblemon.mod.common.api.spawning.detail.SpawnDetail;
+import com.cobblemon.mod.common.pokemon.Pokemon;
 
 import java.util.HashMap;
 import java.util.List;
 
+/**
+ * Loads and stores the rarity for each Pokemon to be referenced.
+ */
 public class SpawnRates {
 
+	// Stores all rarities to easily reference for a price.
 	HashMap<String, Float> rarity;
 
 	public SpawnRates() {
@@ -27,4 +32,12 @@ public class SpawnRates {
 		}
 	}
 
+	/**
+	 * Gets the rarity hashmap.
+	 * @return rarity of given pokemon as a float.
+	 */
+	public float getRarity(Pokemon pokemon) {
+		return rarity.get(pokemon.getDisplayName().getString()) == null ? -1 :
+				rarity.get(pokemon.getDisplayName().getString());
+	}
 }
