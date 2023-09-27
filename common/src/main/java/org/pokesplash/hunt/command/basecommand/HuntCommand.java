@@ -5,29 +5,20 @@ import ca.landonjw.gooeylibs2.api.button.Button;
 import ca.landonjw.gooeylibs2.api.button.FlagType;
 import ca.landonjw.gooeylibs2.api.button.GooeyButton;
 import ca.landonjw.gooeylibs2.api.button.PlaceholderButton;
-import ca.landonjw.gooeylibs2.api.helpers.InventoryHelper;
 import ca.landonjw.gooeylibs2.api.helpers.PaginationHelper;
-import ca.landonjw.gooeylibs2.api.page.GooeyPage;
 import ca.landonjw.gooeylibs2.api.page.LinkedPage;
-import ca.landonjw.gooeylibs2.api.page.Page;
-import ca.landonjw.gooeylibs2.api.template.Template;
 import ca.landonjw.gooeylibs2.api.template.types.ChestTemplate;
 import com.cobblemon.mod.common.item.PokemonItem;
 import com.mojang.brigadier.context.CommandContext;
-import net.minecraft.Util;
 import net.minecraft.commands.CommandSourceStack;
 import net.minecraft.network.chat.Component;
 import net.minecraft.server.level.ServerPlayer;
-import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.item.Items;
 import org.pokesplash.hunt.Hunt;
-import org.pokesplash.hunt.command.subcommand.DebugCommand;
 import org.pokesplash.hunt.command.subcommand.ReloadCommand;
 import org.pokesplash.hunt.hunts.SingleHunt;
 import org.pokesplash.hunt.util.BaseCommand;
 import org.pokesplash.hunt.util.Utils;
 
-import java.lang.reflect.UndeclaredThrowableException;
 import java.util.*;
 
 /**

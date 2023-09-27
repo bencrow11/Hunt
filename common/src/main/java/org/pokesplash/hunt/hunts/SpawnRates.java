@@ -6,7 +6,6 @@ import com.cobblemon.mod.common.pokemon.Pokemon;
 
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
 
 /**
  * Loads and stores the rarity for each Pokemon to be referenced.

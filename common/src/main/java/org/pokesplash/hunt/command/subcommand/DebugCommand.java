@@ -15,8 +15,6 @@ import org.pokesplash.hunt.hunts.SingleHunt;
 import org.pokesplash.hunt.util.Subcommand;
 
 import java.util.Collection;
-import java.util.HashMap;
-import java.util.UUID;
 
 public class DebugCommand extends Subcommand {
 

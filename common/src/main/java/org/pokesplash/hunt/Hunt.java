@@ -1,7 +1,5 @@
 package org.pokesplash.hunt;
 
-import com.cobblemon.mod.common.Cobblemon;
-import dev.architectury.event.Event;
 import dev.architectury.event.events.common.CommandRegistrationEvent;
 import dev.architectury.event.events.common.LifecycleEvent;
 import org.apache.logging.log4j.LogManager;
@@ -12,13 +10,9 @@ import org.pokesplash.hunt.config.Lang;
 import org.pokesplash.hunt.event.EventHandler;
 import org.pokesplash.hunt.hunts.CurrentHunts;
 import org.pokesplash.hunt.hunts.SingleHunt;
+import org.pokesplash.hunt.hunts.SpawnRates;
 import org.pokesplash.hunt.util.CommandsRegistry;
 import org.pokesplash.hunt.util.Permissions;
-import org.pokesplash.hunt.hunts.SpawnRates;
-
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.UUID;
 
 public class Hunt
 {

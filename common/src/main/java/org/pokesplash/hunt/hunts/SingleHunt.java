@@ -1,15 +1,10 @@
 package org.pokesplash.hunt.hunts;
 
-import com.cobblemon.mod.common.api.Priority;
-import com.cobblemon.mod.common.api.abilities.PotentialAbility;
-import com.cobblemon.mod.common.pokemon.FormData;
-import com.cobblemon.mod.common.pokemon.Gender;
 import com.cobblemon.mod.common.pokemon.Pokemon;
 import org.pokesplash.hunt.Hunt;
 import org.pokesplash.hunt.config.CustomPrice;
 
 import java.util.*;
-import java.util.concurrent.ThreadLocalRandom;
 
 public class SingleHunt {
 
