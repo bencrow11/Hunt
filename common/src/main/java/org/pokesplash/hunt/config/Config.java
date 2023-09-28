@@ -11,6 +11,8 @@ import java.util.concurrent.CompletableFuture;
  * Config file.
  */
 public class Config {
+	private boolean sendHuntEndMessage; // Should the mod send a message when a hunt ends.
+	private boolean sendHuntBeginMessage; // Should the mod send a message when a hunt begins.
 	private int huntDuration; // How long each hunt should last, in minutes.
 	private int huntAmount; // How many hunts should there be at once.
 	private float commonPokemonRarity; // What rarity is classed as common.
@@ -24,6 +26,8 @@ public class Config {
 	private ArrayList<CustomPrice> customPrices; // List of custom prices.
 
 	public Config() {
+		sendHuntEndMessage = true;
+		sendHuntBeginMessage = true;
 		huntDuration = 60;
 		huntAmount = 7;
 		commonPokemonRarity = 7;
@@ -54,6 +58,8 @@ public class Config {
 					} else {
 						huntAmount = cfg.getHuntAmount();
 					}
+					sendHuntEndMessage = cfg.isSendHuntEndMessage();
+					sendHuntBeginMessage = cfg.isSendHuntBeginMessage();
 					commonPokemonRarity = cfg.getCommonPokemonRarity();
 					uncommonPokemonRarity = cfg.getUncommonPokemonRarity();
 					rarePokemonRarity = cfg.getRarePokemonRarity();
@@ -128,5 +134,13 @@ public class Config {
 
 	public ArrayList<CustomPrice> getCustomPrices() {
 		return customPrices;
+	}
+
+	public boolean isSendHuntEndMessage() {
+		return sendHuntEndMessage;
+	}
+
+	public boolean isSendHuntBeginMessage() {
+		return sendHuntBeginMessage;
 	}
 }

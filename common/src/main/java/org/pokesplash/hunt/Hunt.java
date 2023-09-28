@@ -2,6 +2,7 @@ package org.pokesplash.hunt;
 
 import dev.architectury.event.events.common.CommandRegistrationEvent;
 import dev.architectury.event.events.common.LifecycleEvent;
+import net.minecraft.server.MinecraftServer;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.pokesplash.hunt.command.basecommand.HuntCommand;
@@ -24,6 +25,7 @@ public class Hunt
 	public static SpawnRates spawnRates = new SpawnRates();
 	public static CurrentHunts hunts = new CurrentHunts();
 	public static Lang language = new Lang();
+	public static MinecraftServer server;
 
 	public static void init() {
 		// Adds command to registry
@@ -36,13 +38,16 @@ public class Hunt
 			load();
 		});
 
-
-
 		// Removes all hunts and cancels timers when server is stopping.
 		LifecycleEvent.SERVER_STOPPING.register((t) -> {
 			for (SingleHunt hunt : hunts.getHunts().values()) {
-				hunts.removeHunt(hunt.getId());
+				hunts.removeHunt(hunt.getId(), false);
 			}
+		});
+
+		// Just gets the server for easy reference.
+		LifecycleEvent.SERVER_LEVEL_LOAD.register((t) -> {
+			server = t.getServer();
 		});
 	}
 

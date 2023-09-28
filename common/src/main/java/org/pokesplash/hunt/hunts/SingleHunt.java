@@ -70,7 +70,7 @@ public class SingleHunt {
 		timer.schedule(new TimerTask() {
 			@Override
 			public void run() {
-				Hunt.hunts.replaceHunt(id);
+				Hunt.hunts.replaceHunt(id, true);
 			}
 		}, duration);
 
@@ -109,8 +109,10 @@ public class SingleHunt {
 
 	public boolean matches(Pokemon pokemon) {
 		// Checks the species and form match.
-		if (!pokemon.getSpecies().getName().equalsIgnoreCase(this.pokemon.getSpecies().getName()) ||
-			!pokemon.getForm().getName().equalsIgnoreCase(this.getPokemon().getForm().getName())) {
+		if (!pokemon.getSpecies().getName().equalsIgnoreCase(this.pokemon.getSpecies().getName())) {
+			return false;
+		}
+		if (!pokemon.getForm().getName().equalsIgnoreCase(this.getPokemon().getForm().getName())) {
 			return false;
 		}
 

@@ -71,7 +71,7 @@ public class HuntCommand extends BaseCommand {
 
 			lore.add("§6Reward: §e" + hunt.getPrice());
 
-			if (Hunt.config.getMatchProperties().isShiny()) {
+			if (hunt.getPokemon().getShiny()) {
 				isShiny = true;
 			}
 

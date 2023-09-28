@@ -2,6 +2,7 @@ package org.pokesplash.hunt.hunts;
 
 import com.cobblemon.mod.common.pokemon.Pokemon;
 import org.pokesplash.hunt.Hunt;
+import org.pokesplash.hunt.util.Utils;
 
 import java.util.HashMap;
 import java.util.UUID;
@@ -41,6 +42,15 @@ public class CurrentHunts {
 					return addHunt();
 				}
 			}
+
+			// If the config setting is enabled, send the broadcast.
+			if (Hunt.config.isSendHuntBeginMessage()) {
+				Utils.broadcastMessage(Utils.formatPlaceholders(
+						Hunt.language.getNewHuntMessage(), null, hunt.getPokemon(), hunt.getPrice()
+				));
+			}
+
+
 			// Add the hunt to the list.
 			return hunts.put(hunt.getId(), hunt);
 		}
@@ -52,10 +62,17 @@ public class CurrentHunts {
 	 * @param id the ID of the hunt to remove.
 	 * @return true if successfully removed.
 	 */
-	public boolean removeHunt(UUID id) {
+	public boolean removeHunt(UUID id, boolean broadcast) {
 		SingleHunt removedHunt = hunts.remove(id);
 		if (removedHunt != null) {
 			removedHunt.getTimer().cancel(); // Cancel timer on hunt.
+
+			// If broadcasts are enabled and the method call wants it broadcast, send it.
+			if (Hunt.config.isSendHuntEndMessage() && broadcast) {
+				Utils.broadcastMessage(Utils.formatPlaceholders(
+						Hunt.language.getEndedHuntMessage(), null, removedHunt.getPokemon(), removedHunt.getPrice()
+				));
+			}
 			return true;
 		}
 		return false;
@@ -66,8 +83,8 @@ public class CurrentHunts {
 	 * @param id the ID of the hunt to remove.
 	 * @return the new Hunt replacement.
 	 */
-	public SingleHunt replaceHunt(UUID id) {
-		if (removeHunt(id)) {
+	public SingleHunt replaceHunt(UUID id, boolean broadcast) {
+		if (removeHunt(id, broadcast)) {
 			return addHunt();
 		}
 		return null;
@@ -86,6 +103,20 @@ public class CurrentHunts {
 		}
 		return null;
 	}
+
+	/**
+	 * Gets the price of the specified hunt.
+	 * @param uuid The hunt UUID to check.
+	 * @return The price of the hunt.
+	 */
+	public double getPrice(UUID uuid) {
+		SingleHunt hunt = hunts.get(uuid);
+		if (hunt != null) {
+			return hunt.getPrice();
+		}
+		return -1;
+	}
+
 
 	/**
 	 * Gets all of the hunts.

@@ -48,7 +48,7 @@ public class ReloadCommand extends Subcommand {
 		// Removes current hunts, the case the config size changes.
 		ArrayList<UUID> uuids = new ArrayList<>(Hunt.hunts.getHunts().keySet());
 		for (UUID hunt : uuids) {
-			Hunt.hunts.removeHunt(hunt);
+			Hunt.hunts.removeHunt(hunt, true);
 		}
 
 		Hunt.load();

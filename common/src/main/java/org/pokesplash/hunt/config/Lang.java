@@ -13,11 +13,19 @@ public class Lang {
 	private String title; // Title of the menu
 	private String fillerMaterial; // The material used as the border in the UI.
 	private String reloadMessage; // Reload message.
+	private String captureHuntBroadcast; // Message broadcast to players when a hunt has been caught.
+	private String payMessage; // Message sent when a player gets paid.
+	private String endedHuntMessage; // The message sent when a hunt ends.
+	private String newHuntMessage; // The message sent when a new hunt begins.
 
 	public Lang() {
 		title = "Hunt";
 		fillerMaterial = "minecraft:white_stained_glass_pane";
 		reloadMessage = "§2Reloaded Configs!";
+		captureHuntBroadcast = "§5[Hunt] §e{player} §2has successfully hunted §e{pokemon}";
+		payMessage = "§5[Hunt] §eYou were paid {price} from hunt!";
+		endedHuntMessage = "§5[Hunt] §3The hunt for {pokemon} has ended!";
+		newHuntMessage = "§5[Hunt] §bThe hunt for {pokemon} has begun!";
 	}
 
 	public String getTitle() {
@@ -28,6 +36,19 @@ public class Lang {
 	}
 	public String getReloadMessage() {
 		return reloadMessage;
+	}
+	public String getCaptureHuntBroadcast() {
+		return captureHuntBroadcast;
+	}
+	public String getPayMessage() {
+		return payMessage;
+	}
+	public String getEndedHuntMessage() {
+		return endedHuntMessage;
+	}
+
+	public String getNewHuntMessage() {
+		return newHuntMessage;
 	}
 
 	/**
@@ -41,6 +62,10 @@ public class Lang {
 					title = lang.getTitle();
 					fillerMaterial = lang.getFillerMaterial();
 					reloadMessage = lang.getReloadMessage();
+					captureHuntBroadcast = lang.getCaptureHuntBroadcast();
+					payMessage = lang.getPayMessage();
+					endedHuntMessage = lang.getEndedHuntMessage();
+					newHuntMessage = lang.getNewHuntMessage();
 				});
 
 		if (!futureRead.join()) {

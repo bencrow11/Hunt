@@ -5,6 +5,9 @@ import com.cobblemon.mod.common.pokemon.Pokemon;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import net.minecraft.nbt.CompoundTag;
+import net.minecraft.network.chat.Component;
+import net.minecraft.server.MinecraftServer;
+import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.item.ItemStack;
 import org.pokesplash.hunt.Hunt;
 
@@ -19,6 +22,7 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.nio.file.StandardOpenOption;
+import java.util.ArrayList;
 import java.util.Scanner;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ExecutorService;
@@ -175,19 +179,6 @@ public abstract class Utils {
 	}
 
 	/**
-	 * Method to check if a directory exists. If it doesn't, create it.
-	 * @param path The directory to check.
-	 * @return the directory as a File.
-	 */
-	public static File checkForDirectory(String path) {
-		File dir = new File(new File("").getAbsolutePath() + path);
-		if (!dir.exists()) {
-			dir.mkdirs();
-		}
-		return dir;
-	}
-
-	/**
 	 * Method to create a new gson builder.
 	 * @return Gson instance.
 	 */
@@ -206,20 +197,6 @@ public abstract class Utils {
 			return message.trim();
 		} else {
 			return message.replaceAll("§[0-9a-fk-or]", "").trim();
-		}
-	}
-
-	/**
-	 * Checks if a string can be parsed to integer.
-	 * @param string the string to try and parse.
-	 * @return true if the string can be parsed.
-	 */
-	public static boolean isStringInt(String string) {
-		try {
-			Integer.parseInt(string);
-			return true;
-		} catch (NumberFormatException e) {
-			return false;
 		}
 	}
 
@@ -277,45 +254,40 @@ public abstract class Utils {
 		return message.substring(0, 1).toUpperCase() + message.substring(1).toLowerCase();
 	}
 
-	public static boolean isHA(Pokemon pokemon) {
-		if (pokemon.getForm().getAbilities().getMapping().get(Priority.LOW).size() != 1) {
-			return false;
+	public static String formatPlaceholders(String message, ServerPlayer player, Pokemon pokemon, double price) {
+		String newMessage = message;
+		if (message == null) {
+			return "";
 		}
-		String ability =
-				pokemon.getForm().getAbilities().getMapping().get(Priority.LOW).get(0).getTemplate().getName();
 
-		return pokemon.getAbility().getName().equalsIgnoreCase(ability);
+		if (player != null) {
+			newMessage = newMessage.replaceAll("\\{player\\}", player.getName().getString());
+		}
+
+		if (pokemon != null) {
+			newMessage = newMessage.replaceAll("\\{pokemon\\}", pokemon.getDisplayName().getString());
+		}
+
+		if (price != -1) {
+			newMessage = newMessage.replaceAll("\\{price\\}", String.valueOf(price));
+		}
+
+		return  newMessage;
 	}
-
-//	public static String formatPlaceholders(String message, double minPrice, String listing,
-//	                                        String seller, String buyer) {
-//		String newMessage = message;
-//		if (message == null) {
-//			return "";
-//		}
-//
-//		if (listing != null) {
-//			newMessage = newMessage.replaceAll("\\{listing\\}", listing);
-//		}
-//
-//		if (seller != null) {
-//			newMessage = newMessage.replaceAll("\\{seller\\}", seller);
-//		}
-//
-//		if (buyer != null) {
-//			newMessage = newMessage.replaceAll("\\{buyer\\}", buyer);
-//		}
-//
-//		return newMessage
-//				.replaceAll("\\{min_price\\}", "" + minPrice)
-//				.replaceAll("\\{max_listings\\}", "" + Hunt.config.getMax_listings_per_player())
-//				.replaceAll("\\{max_price\\}", "" + Hunt.config.getMaximum_price());
-//	}
 
 	public static ItemStack parseItemId(String id) {
 		CompoundTag tag = new CompoundTag();
 		tag.putString("id", id);
 		tag.putInt("Count", 1);
 		return ItemStack.of(tag);
+	}
+
+	public static void broadcastMessage(String message) {
+		MinecraftServer server = Hunt.server;
+		ArrayList<ServerPlayer> players = new ArrayList<>(server.getPlayerList().getPlayers());
+
+		for (ServerPlayer pl : players) {
+			pl.sendSystemMessage(Component.literal(message));
+		}
 	}
 }
