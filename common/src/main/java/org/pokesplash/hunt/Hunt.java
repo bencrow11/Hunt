@@ -15,6 +15,8 @@ import org.pokesplash.hunt.hunts.SpawnRates;
 import org.pokesplash.hunt.util.CommandsRegistry;
 import org.pokesplash.hunt.util.Permissions;
 
+import java.util.ArrayList;
+
 public class Hunt
 {
 	public static final String MOD_ID = "hunt";
@@ -40,7 +42,8 @@ public class Hunt
 
 		// Removes all hunts and cancels timers when server is stopping.
 		LifecycleEvent.SERVER_STOPPING.register((t) -> {
-			for (SingleHunt hunt : hunts.getHunts().values()) {
+			ArrayList<SingleHunt> huntList = new ArrayList<>(hunts.getHunts().values());
+			for (SingleHunt hunt : huntList) {
 				hunts.removeHunt(hunt.getId(), false);
 			}
 		});
