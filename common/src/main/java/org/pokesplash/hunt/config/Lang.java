@@ -21,8 +21,8 @@ public class Lang {
 	public Lang() {
 		title = "Hunt";
 		fillerMaterial = "minecraft:white_stained_glass_pane";
-		reloadMessage = "§2Reloaded Configs!";
-		captureHuntBroadcast = "§5[Hunt] §e{player} §2has successfully hunted §e{pokemon}";
+		reloadMessage = "§aReloaded Configs!";
+		captureHuntBroadcast = "§5[Hunt] §e{player} §ahas successfully hunted §e{pokemon}";
 		payMessage = "§5[Hunt] §eYou were paid {price} from hunt!";
 		endedHuntMessage = "§5[Hunt] §3The hunt for {pokemon} has ended!";
 		newHuntMessage = "§5[Hunt] §bThe hunt for {pokemon} has begun!";
