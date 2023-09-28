@@ -47,6 +47,7 @@ public abstract class EventHandler {
 						}
 					} catch (NullPointerException ex) {
 						// Just in case playerlist is empty for some random reason.
+						ex.printStackTrace();
 					}
 				}
 				// If any errors occur, send log to console.
