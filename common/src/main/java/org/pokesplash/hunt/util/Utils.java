@@ -1,6 +1,5 @@
 package org.pokesplash.hunt.util;
 
-import com.cobblemon.mod.common.api.Priority;
 import com.cobblemon.mod.common.pokemon.Pokemon;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
@@ -10,6 +9,7 @@ import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.item.ItemStack;
 import org.pokesplash.hunt.Hunt;
+import org.pokesplash.hunt.hunts.SingleHunt;
 
 import java.io.File;
 import java.io.FileWriter;
@@ -286,6 +286,13 @@ public abstract class Utils {
 
 		for (ServerPlayer pl : players) {
 			pl.sendSystemMessage(Component.literal(message));
+		}
+	}
+
+	public static void removeAllHunts() {
+		ArrayList<SingleHunt> huntList = new ArrayList<>(Hunt.hunts.getHunts().values());
+		for (SingleHunt hunt : huntList) {
+			Hunt.hunts.removeHunt(hunt.getId(), false);
 		}
 	}
 }

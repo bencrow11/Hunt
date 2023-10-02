@@ -1,7 +1,5 @@
 package org.pokesplash.hunt;
 
-import dev.architectury.event.events.common.CommandRegistrationEvent;
-import dev.architectury.event.events.common.LifecycleEvent;
 import net.minecraft.server.MinecraftServer;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -10,12 +8,9 @@ import org.pokesplash.hunt.config.Config;
 import org.pokesplash.hunt.config.Lang;
 import org.pokesplash.hunt.event.EventHandler;
 import org.pokesplash.hunt.hunts.CurrentHunts;
-import org.pokesplash.hunt.hunts.SingleHunt;
 import org.pokesplash.hunt.hunts.SpawnRates;
 import org.pokesplash.hunt.util.CommandsRegistry;
 import org.pokesplash.hunt.util.Permissions;
-
-import java.util.ArrayList;
 
 public class Hunt
 {
@@ -32,26 +27,7 @@ public class Hunt
 	public static void init() {
 		// Adds command to registry
 		CommandsRegistry.addCommand(new HuntCommand());
-		// Registry registers all commands
-		CommandRegistrationEvent.EVENT.register(CommandsRegistry::registerCommands);
 		EventHandler.registerEvents();
-
-		LifecycleEvent.SERVER_STARTED.register((t) -> {
-			load();
-		});
-
-		// Removes all hunts and cancels timers when server is stopping.
-		LifecycleEvent.SERVER_STOPPING.register((t) -> {
-			ArrayList<SingleHunt> huntList = new ArrayList<>(hunts.getHunts().values());
-			for (SingleHunt hunt : huntList) {
-				hunts.removeHunt(hunt.getId(), false);
-			}
-		});
-
-		// Just gets the server for easy reference.
-		LifecycleEvent.SERVER_LEVEL_LOAD.register((t) -> {
-			server = t.getServer();
-		});
 	}
 
 	/**
