@@ -63,7 +63,7 @@ public class CurrentHunts {
 	 * @param id the ID of the hunt to remove.
 	 * @return true if successfully removed.
 	 */
-	public boolean removeHunt(UUID id, boolean broadcast) {
+	public SingleHunt removeHunt(UUID id, boolean broadcast) {
 		SingleHunt removedHunt = hunts.remove(id);
 		if (removedHunt != null) {
 			removedHunt.getTimer().cancel(); // Cancel timer on hunt.
@@ -74,9 +74,8 @@ public class CurrentHunts {
 						Hunt.language.getEndedHuntMessage(), null, removedHunt.getPokemon(), removedHunt.getPrice()
 				));
 			}
-			return true;
 		}
-		return false;
+		return removedHunt;
 	}
 
 	/**
@@ -84,9 +83,11 @@ public class CurrentHunts {
 	 * @param id the ID of the hunt to remove.
 	 * @return the new Hunt replacement.
 	 */
-	public SingleHunt replaceHunt(UUID id, boolean broadcast) {
-		if (removeHunt(id, broadcast)) {
-			return addHunt();
+	public ReplacedHunt replaceHunt(UUID id, boolean broadcast) {
+		SingleHunt oldHunt = removeHunt(id, broadcast);
+
+		if (oldHunt != null) {
+			return new ReplacedHunt(oldHunt, addHunt());
 		}
 		return null;
 	}

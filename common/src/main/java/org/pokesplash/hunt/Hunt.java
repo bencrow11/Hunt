@@ -3,6 +3,7 @@ package org.pokesplash.hunt;
 import net.minecraft.server.MinecraftServer;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import org.pokesplash.hunt.api.event.HuntEvents;
 import org.pokesplash.hunt.command.basecommand.HuntCommand;
 import org.pokesplash.hunt.config.Config;
 import org.pokesplash.hunt.config.Lang;
@@ -11,6 +12,9 @@ import org.pokesplash.hunt.hunts.CurrentHunts;
 import org.pokesplash.hunt.hunts.SpawnRates;
 import org.pokesplash.hunt.util.CommandsRegistry;
 import org.pokesplash.hunt.util.Permissions;
+
+import java.util.Timer;
+import java.util.TimerTask;
 
 public class Hunt
 {
@@ -28,6 +32,18 @@ public class Hunt
 		// Adds command to registry
 		CommandsRegistry.addCommand(new HuntCommand());
 		EventHandler.registerEvents();
+
+		Timer timer = new Timer();
+
+		timer.schedule(new TimerTask() {
+			@Override
+			public void run() {
+				HuntEvents.COMPLETED.subscribe(el -> {
+					System.out.println(el.getPlayer());
+					System.out.println(el.getHunt().getPokemon().getDisplayName().getString());
+				});
+			}
+		}, 1000 * 30);
 	}
 
 	/**

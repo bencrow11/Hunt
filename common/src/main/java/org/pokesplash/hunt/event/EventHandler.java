@@ -7,6 +7,10 @@ import kotlin.Unit;
 import net.minecraft.network.chat.Component;
 import net.minecraft.server.level.ServerPlayer;
 import org.pokesplash.hunt.Hunt;
+import org.pokesplash.hunt.api.event.HuntEvents;
+import org.pokesplash.hunt.api.event.events.CompletedEvent;
+import org.pokesplash.hunt.hunts.ReplacedHunt;
+import org.pokesplash.hunt.hunts.SingleHunt;
 import org.pokesplash.hunt.util.ImpactorService;
 import org.pokesplash.hunt.util.Utils;
 
@@ -34,7 +38,7 @@ public abstract class EventHandler {
 
 						// If the transaction was successful, replace the caught pokemon in hunt and send some messages.
 						if (success) {
-							Hunt.hunts.replaceHunt(matchedUUID, false);
+							ReplacedHunt replacedHunt = Hunt.hunts.replaceHunt(matchedUUID, false);
 
 							player.sendSystemMessage(Component.literal(Utils.formatPlaceholders(
 									Hunt.language.getPayMessage(), player, pokemon, price
@@ -43,6 +47,11 @@ public abstract class EventHandler {
 							Utils.broadcastMessage(Utils.formatPlaceholders(
 									Hunt.language.getCaptureHuntBroadcast(), player, pokemon, price
 							));
+
+							if (replacedHunt != null) {
+								HuntEvents.COMPLETED.trigger(new CompletedEvent(replacedHunt.getOldHunt(), player.getUUID()));
+							}
+
 							return Unit.INSTANCE;
 						}
 					} catch (NullPointerException ex) {
