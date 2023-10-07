@@ -10,7 +10,6 @@ import org.pokesplash.hunt.Hunt;
 import org.pokesplash.hunt.api.event.HuntEvents;
 import org.pokesplash.hunt.api.event.events.CompletedEvent;
 import org.pokesplash.hunt.hunts.ReplacedHunt;
-import org.pokesplash.hunt.hunts.SingleHunt;
 import org.pokesplash.hunt.util.ImpactorService;
 import org.pokesplash.hunt.util.Utils;
 

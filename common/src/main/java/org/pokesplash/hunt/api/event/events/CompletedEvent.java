@@ -1,6 +1,5 @@
 package org.pokesplash.hunt.api.event.events;
 
-import com.cobblemon.mod.common.pokemon.Pokemon;
 import org.pokesplash.hunt.hunts.SingleHunt;
 
 import java.util.UUID;
