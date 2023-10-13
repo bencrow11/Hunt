@@ -39,7 +39,7 @@ public class CurrentHunts {
 			// If the species already exists, recurse and try again.
 			ArrayList<UUID> huntIds = new ArrayList<>(hunts.keySet());
 			for (UUID id : huntIds) {
-				if (hunts.get(id).getPokemon() != null) {
+				if (hunts.containsKey(id)) {
 					Pokemon currentPokemon = hunts.get(id).getPokemon();
 					if (currentPokemon.getSpecies().getName().equalsIgnoreCase(hunt.getPokemon().getSpecies().getName())) {
 						return addHunt();
