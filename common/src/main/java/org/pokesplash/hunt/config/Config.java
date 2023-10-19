@@ -31,8 +31,8 @@ public class Config {
 		huntDuration = 60;
 		huntAmount = 7;
 		commonPokemonRarity = 7;
-		uncommonPokemonRarity = 4;
-		rarePokemonRarity = 1;
+		uncommonPokemonRarity = 2.5F;
+		rarePokemonRarity = 0.3F;
 		commonPokemonPrice = 100;
 		uncommonPokemonPrice = 500;
 		rarePokemonPrice = 700;
