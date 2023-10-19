@@ -19,10 +19,11 @@ public class Tracker {
 	 * @param pokemon The Pokemon to add to.
 	 */
 	public void addTracker(String pokemon) {
-		if (tracker.containsKey(pokemon)) {
-			tracker.get(pokemon).addTracker();
+		if (!tracker.containsKey(pokemon)) {
+			tracker.put(pokemon, new TrackerPokemon(pokemon));
 		}
-		tracker.put(pokemon, new TrackerPokemon(pokemon));
+		tracker.get(pokemon).addTracker();
+		writeToFile();
 	}
 
 	/**
@@ -30,10 +31,11 @@ public class Tracker {
 	 * @param pokemon The Pokemon to remove from.
 	 */
 	public void subtractTracker(String pokemon) {
-		if (tracker.containsKey(pokemon)) {
-			tracker.get(pokemon).subtractTracker();
+		if (!tracker.containsKey(pokemon)) {
+			tracker.put(pokemon, new TrackerPokemon(pokemon));
 		}
-		tracker.put(pokemon, new TrackerPokemon(pokemon));
+		tracker.get(pokemon).subtractTracker();
+		writeToFile();
 	}
 
 	/**
@@ -42,9 +44,6 @@ public class Tracker {
 	 * @return The value of the tracker.
 	 */
 	public TrackerPokemon getTracker(String pokemon) {
-		if (!tracker.containsKey(pokemon)) {
-			tracker.put(pokemon, new TrackerPokemon(pokemon));
-		}
 		return tracker.get(pokemon);
 	}
 
@@ -81,5 +80,17 @@ public class Tracker {
 			return;
 		}
 		Hunt.LOGGER.info("Hunt tracker file read successfully");
+	}
+
+	private void writeToFile() {
+		Gson gson = Utils.newGson();
+		String data = gson.toJson(this);
+
+		CompletableFuture<Boolean> success = Utils.writeFileAsync("/config/hunt/",
+				"tracker.json", data);
+
+		if (!success.join()) {
+			Hunt.LOGGER.fatal("Could not update tracker for Hunt.");
+		}
 	}
 }

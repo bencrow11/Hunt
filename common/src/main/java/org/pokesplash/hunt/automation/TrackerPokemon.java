@@ -24,11 +24,12 @@ public class TrackerPokemon {
 	}
 
 	private void addCount() {
-		if (Hunt.config.isEnableTracker()) {
+		if (!Hunt.config.isEnableTracker()) {
 			return;
 		}
 
-		if (count + 1 >= Hunt.trackerConfig.getFrequency()) {
+		count ++;
+		if (count >= Hunt.trackerConfig.getFrequency()) {
 
 			if (tracker > 0) {
 				if (multiplier < Hunt.trackerConfig.getMaximum()) {
@@ -42,18 +43,16 @@ public class TrackerPokemon {
 
 			count = 0;
 			tracker = 0;
-		} else {
-			count ++;
 		}
 	}
 
 	public void addTracker() {
-		tracker ++;
+		this.tracker ++; // TODO this adds to the fucking count?!?!
 		addCount();
 	}
 
 	public void subtractTracker() {
-		tracker --;
+		this.tracker --;
 		addCount();
 	}
 }
