@@ -49,6 +49,7 @@ public abstract class EventHandler {
 
 							if (replacedHunt != null) {
 								HuntEvents.COMPLETED.trigger(new CompletedEvent(replacedHunt.getOldHunt(), player.getUUID()));
+								Hunt.tracker.addTracker(replacedHunt.getOldHunt().getPokemon().getDisplayName().getString());
 							}
 
 							return Unit.INSTANCE;

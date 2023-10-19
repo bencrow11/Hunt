@@ -11,6 +11,7 @@ import java.util.concurrent.CompletableFuture;
  * Config file.
  */
 public class Config {
+	private boolean enableTracker; // Should the tracker be used.
 	private boolean sendHuntEndMessage; // Should the mod send a message when a hunt ends.
 	private boolean sendHuntBeginMessage; // Should the mod send a message when a hunt begins.
 	private int huntDuration; // How long each hunt should last, in minutes.
@@ -26,6 +27,7 @@ public class Config {
 	private ArrayList<CustomPrice> customPrices; // List of custom prices.
 
 	public Config() {
+		enableTracker = true;
 		sendHuntEndMessage = true;
 		sendHuntBeginMessage = true;
 		huntDuration = 60;
@@ -58,6 +60,7 @@ public class Config {
 					} else {
 						huntAmount = cfg.getHuntAmount();
 					}
+					enableTracker = cfg.isEnableTracker();
 					sendHuntEndMessage = cfg.isSendHuntEndMessage();
 					sendHuntBeginMessage = cfg.isSendHuntBeginMessage();
 					commonPokemonRarity = cfg.getCommonPokemonRarity();
@@ -92,6 +95,9 @@ public class Config {
 	 * Bunch of Getters
 	 */
 
+	public boolean isEnableTracker() {
+		return enableTracker;
+	}
 	public int getHuntDuration() {
 		return huntDuration;
 	}

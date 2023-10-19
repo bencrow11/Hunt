@@ -60,6 +60,7 @@ public class SingleHunt {
 			} else {
 				price = Hunt.config.getUltraRarePokemonPrice();
 			}
+			price *= Hunt.tracker.getTracker(pokemon.getDisplayName().getString()).getMultiplier();
 		}
 		pokemon.checkAbility();
 		pokemon.checkGender();

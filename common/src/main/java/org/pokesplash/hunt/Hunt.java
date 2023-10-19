@@ -3,6 +3,8 @@ package org.pokesplash.hunt;
 import net.minecraft.server.MinecraftServer;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import org.pokesplash.hunt.automation.Tracker;
+import org.pokesplash.hunt.automation.TrackerConfig;
 import org.pokesplash.hunt.command.basecommand.HuntCommand;
 import org.pokesplash.hunt.config.Config;
 import org.pokesplash.hunt.config.Lang;
@@ -22,6 +24,9 @@ public class Hunt
 	public static SpawnRates spawnRates = new SpawnRates();
 	public static CurrentHunts hunts = new CurrentHunts();
 	public static Lang language = new Lang();
+	public static TrackerConfig trackerConfig = new TrackerConfig();
+	public static Tracker tracker = new Tracker();
+
 	public static MinecraftServer server;
 
 	public static void init() {
@@ -38,5 +43,10 @@ public class Hunt
 		spawnRates.init();
 		hunts.init();
 		language.init();
+
+		if (config.isEnableTracker()) {
+			trackerConfig.init();
+			tracker.init();
+		}
 	}
 }
