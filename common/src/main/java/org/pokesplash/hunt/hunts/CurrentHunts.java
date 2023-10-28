@@ -5,6 +5,7 @@ import org.pokesplash.hunt.Hunt;
 import org.pokesplash.hunt.util.Utils;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.UUID;
 

@@ -12,6 +12,8 @@ import com.cobblemon.mod.common.item.PokemonItem;
 import com.mojang.brigadier.context.CommandContext;
 import net.minecraft.commands.CommandSourceStack;
 import net.minecraft.network.chat.Component;
+import net.minecraft.network.chat.Style;
+import net.minecraft.network.chat.TextColor;
 import net.minecraft.server.level.ServerPlayer;
 import org.pokesplash.hunt.Hunt;
 import org.pokesplash.hunt.command.subcommand.ReloadCommand;
@@ -53,29 +55,35 @@ public class HuntCommand extends BaseCommand {
 
 		List<Button> hunts = new ArrayList<>();
 		for (SingleHunt hunt : Hunt.hunts.getHunts().values()) {
-			Collection<String> lore = new ArrayList<>();
+			Collection<Component> lore = new ArrayList<>();
+
+			Style green = Component.empty().getStyle().withColor(TextColor.parseColor("green"));
 
 			boolean isShiny = false;
 
 			if (Hunt.config.getMatchProperties().isAbility()) {
-				lore.add("§2Ability: §a" + Utils.capitaliseFirst(hunt.getPokemon().getAbility().getName()));
+				lore.add(Component.literal("§2Ability: ")
+						.append(Component.translatable(hunt.getPokemon().getAbility().getDisplayName()).setStyle(green)));
 			}
 
+
 			if (Hunt.config.getMatchProperties().isGender()) {
-				lore.add("§3Gender: §b" + Utils.capitaliseFirst(hunt.getPokemon().getGender().toString()));
+				lore.add(Component.literal("§3Gender: §b" + Utils.capitaliseFirst(hunt.getPokemon().getGender().toString())));
 			}
 
 			if (Hunt.config.getMatchProperties().isNature()) {
-				lore.add("§5Nature: §d" + Utils.capitaliseFirst(hunt.getPokemon().getNature().getName().getPath()));
+				lore.add(Component.literal("§5Nature: ").
+						append(Component.translatable(hunt.getPokemon().getNature().getDisplayName())
+								.setStyle(Style.EMPTY.withColor(TextColor.parseColor("light_purple")))));
 			}
 
-			lore.add("§6Reward: §e" + hunt.getPrice());
+			lore.add(Component.literal("§6Reward: §e" + hunt.getPrice()));
 
 			if (hunt.getPokemon().getShiny()) {
 				isShiny = true;
 			}
 
-			lore.add("§9Time Remaining: §b" + Utils.parseLongDate(hunt.getEndtime() - new Date().getTime()));
+			lore.add(Component.literal("§9Time Remaining: §b" + Utils.parseLongDate(hunt.getEndtime() - new Date().getTime())));
 
 			String title = hunt.getPokemon().getSpecies().getName() +
 					(hunt.getPokemon().getForm().getName().equalsIgnoreCase("normal") ? "" :
@@ -84,7 +92,7 @@ public class HuntCommand extends BaseCommand {
 			GooeyButton button = GooeyButton.builder()
 					.display(PokemonItem.from(hunt.getPokemon(), 1))
 					.title(isShiny ? "§e" + title : "§b" + title)
-					.lore(lore)
+					.lore(Component.class, lore)
 					.build();
 
 			hunts.add(button);
