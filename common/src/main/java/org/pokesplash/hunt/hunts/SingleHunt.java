@@ -5,6 +5,7 @@ import org.pokesplash.hunt.Hunt;
 import org.pokesplash.hunt.config.CustomPrice;
 
 import java.util.*;
+import java.text.DecimalFormat;
 
 public class SingleHunt {
 
@@ -88,6 +89,11 @@ public class SingleHunt {
 
 	public double getPrice() {
 		return price;
+	}
+
+	public String getPriceAsString() {
+		DecimalFormat df = new DecimalFormat("0.##");
+		return df.format(price);
 	}
 
 	public Pokemon getPokemon() {

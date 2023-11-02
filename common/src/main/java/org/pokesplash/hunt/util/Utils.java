@@ -22,6 +22,7 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.nio.file.StandardOpenOption;
+import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.Scanner;
 import java.util.concurrent.CompletableFuture;
@@ -267,7 +268,8 @@ public abstract class Utils {
 		}
 
 		if (price != -1) {
-			newMessage = newMessage.replaceAll("\\{price\\}", String.valueOf(price));
+			DecimalFormat df = new DecimalFormat("0.##");
+			newMessage = newMessage.replaceAll("\\{price\\}", df.format(price));
 		}
 
 		return  newMessage;
