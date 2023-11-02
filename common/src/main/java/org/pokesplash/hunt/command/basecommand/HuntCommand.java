@@ -62,28 +62,28 @@ public class HuntCommand extends BaseCommand {
 			boolean isShiny = false;
 
 			if (Hunt.config.getMatchProperties().isAbility()) {
-				lore.add(Component.literal("§2Ability: ")
+				lore.add(Component.literal(Hunt.language.getAbility())
 						.append(Component.translatable(hunt.getPokemon().getAbility().getDisplayName()).setStyle(green)));
 			}
 
 
 			if (Hunt.config.getMatchProperties().isGender()) {
-				lore.add(Component.literal("§3Gender: §b" + Utils.capitaliseFirst(hunt.getPokemon().getGender().toString())));
+				lore.add(Component.literal(Hunt.language.getGender() + Utils.capitaliseFirst(hunt.getPokemon().getGender().toString())));
 			}
 
 			if (Hunt.config.getMatchProperties().isNature()) {
-				lore.add(Component.literal("§5Nature: ").
+				lore.add(Component.literal(Hunt.language.getNature()).
 						append(Component.translatable(hunt.getPokemon().getNature().getDisplayName())
 								.setStyle(Style.EMPTY.withColor(TextColor.parseColor("light_purple")))));
 			}
 
-			lore.add(Component.literal("§6Reward: §e" + hunt.getPrice()));
+			lore.add(Component.literal(Hunt.language.getReward() + hunt.getPrice()));
 
 			if (hunt.getPokemon().getShiny()) {
 				isShiny = true;
 			}
 
-			lore.add(Component.literal("§9Time Remaining: §b" + Utils.parseLongDate(hunt.getEndtime() - new Date().getTime())));
+			lore.add(Component.literal(Hunt.language.getTimeRemaining() + Utils.parseLongDate(hunt.getEndtime() - new Date().getTime())));
 
 			String title = hunt.getPokemon().getSpecies().getName() +
 					(hunt.getPokemon().getForm().getName().equalsIgnoreCase("normal") ? "" :
