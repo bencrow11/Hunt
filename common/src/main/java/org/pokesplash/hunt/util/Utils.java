@@ -292,7 +292,9 @@ public abstract class Utils {
 	public static void removeAllHunts() {
 		ArrayList<SingleHunt> huntList = new ArrayList<>(Hunt.hunts.getHunts().values());
 		for (SingleHunt hunt : huntList) {
-			Hunt.hunts.removeHunt(hunt.getId(), false);
+			if (hunt != null) {
+				Hunt.hunts.removeHunt(hunt.getId(), false);
+			}
 		}
 	}
 }
