@@ -12,6 +12,7 @@ import com.cobblemon.mod.common.item.PokemonItem;
 import com.mojang.brigadier.context.CommandContext;
 import net.minecraft.commands.CommandSourceStack;
 import net.minecraft.network.chat.Component;
+import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.network.chat.Style;
 import net.minecraft.network.chat.TextColor;
 import net.minecraft.server.level.ServerPlayer;
@@ -57,41 +58,59 @@ public class HuntCommand extends BaseCommand {
 		for (SingleHunt hunt : Hunt.hunts.getHunts().values()) {
 			Collection<Component> lore = new ArrayList<>();
 
-			Style green = Component.empty().getStyle().withColor(TextColor.parseColor("green"));
+			Style aqua = Style.EMPTY.withColor(TextColor.parseColor("aqua"));
+			Style blue = Style.EMPTY.withColor(TextColor.parseColor("blue"));
+			Style dark_green = Style.EMPTY.withColor(TextColor.parseColor("dark_green"));
+			Style dark_purple = Style.EMPTY.withColor(TextColor.parseColor("dark_purple"));
+			Style green = Style.EMPTY.withColor(TextColor.parseColor("green"));
+			Style red = Style.EMPTY.withColor(TextColor.parseColor("red"));
+			Style yellow = Style.EMPTY.withColor(TextColor.parseColor("yellow"));
 
-			boolean isShiny = false;
+			boolean isShiny = hunt.getPokemon().getShiny();
+
+			MutableComponent title = hunt.getPokemon().getSpecies().getTranslatedName().setStyle(isShiny ? yellow : aqua);
+
+			if (isShiny) {
+				title.append(Component.literal("★").setStyle(red));
+			}
+
+			if (Hunt.config.getMatchProperties().isGender()) {
+				switch (hunt.getPokemon().getGender().toString()) {
+					case "MALE":
+						title.append(Component.literal(" ♂").setStyle(blue));
+						break;
+					case "FEMALE":
+						title.append(Component.literal(" ♀").setStyle(red));
+						break;
+					default:
+						break;
+				}
+			}
+
+			if (!hunt.getPokemon().getForm().getName().equalsIgnoreCase("normal")) {
+				title.append(Component.literal(" - " + hunt.getPokemon().getForm().getName()).setStyle(aqua));
+			}
 
 			if (Hunt.config.getMatchProperties().isAbility()) {
-				lore.add(Component.literal("§2Ability: ")
+				lore.add(Component.translatable("cobblemon.ui.info.ability").setStyle(dark_green)
+						.append(Component.literal(": "))
 						.append(Component.translatable(hunt.getPokemon().getAbility().getDisplayName()).setStyle(green)));
 			}
 
-
-			if (Hunt.config.getMatchProperties().isGender()) {
-				lore.add(Component.literal("§3Gender: §b" + Utils.capitaliseFirst(hunt.getPokemon().getGender().toString())));
-			}
-
 			if (Hunt.config.getMatchProperties().isNature()) {
-				lore.add(Component.literal("§5Nature: ").
-						append(Component.translatable(hunt.getPokemon().getNature().getDisplayName())
+				lore.add(Component.translatable("cobblemon.ui.info.nature").setStyle(dark_purple)
+						.append(Component.literal(": "))
+						.append(Component.translatable(hunt.getPokemon().getNature().getDisplayName())
 								.setStyle(Style.EMPTY.withColor(TextColor.parseColor("light_purple")))));
 			}
 
-			lore.add(Component.literal("§6Reward: §e" + hunt.getPrice()));
+			lore.add(Component.literal(Hunt.language.getReward() + hunt.getPriceAsString()));
 
-			if (hunt.getPokemon().getShiny()) {
-				isShiny = true;
-			}
-
-			lore.add(Component.literal("§9Time Remaining: §b" + Utils.parseLongDate(hunt.getEndtime() - new Date().getTime())));
-
-			String title = hunt.getPokemon().getSpecies().getName() +
-					(hunt.getPokemon().getForm().getName().equalsIgnoreCase("normal") ? "" :
-							" - " + hunt.getPokemon().getForm().getName());
+			lore.add(Component.literal(Hunt.language.getTimeRemaining() + Utils.parseLongDate(hunt.getEndtime() - new Date().getTime())));
 
 			GooeyButton button = GooeyButton.builder()
 					.display(PokemonItem.from(hunt.getPokemon(), 1))
-					.title(isShiny ? "§e" + title : "§b" + title)
+					.title(title)
 					.lore(Component.class, lore)
 					.build();
 
