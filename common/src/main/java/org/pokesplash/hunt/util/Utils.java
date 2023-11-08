@@ -14,6 +14,7 @@ import org.pokesplash.hunt.hunts.SingleHunt;
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.lang.reflect.Array;
 import java.nio.ByteBuffer;
 import java.nio.channels.AsynchronousFileChannel;
 import java.nio.channels.CompletionHandler;
@@ -23,8 +24,7 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.nio.file.StandardOpenOption;
 import java.text.DecimalFormat;
-import java.util.ArrayList;
-import java.util.Scanner;
+import java.util.*;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
@@ -292,8 +292,8 @@ public abstract class Utils {
 	}
 
 	public static void removeAllHunts() {
-		ArrayList<SingleHunt> huntList = new ArrayList<>(Hunt.hunts.getHunts().values());
-		for (SingleHunt hunt : huntList) {
+		ArrayList<SingleHunt> copy = (ArrayList<SingleHunt>) new ArrayList<>(Hunt.hunts.getHunts().values()).clone();
+		for (SingleHunt hunt : copy) {
 			if (hunt != null) {
 				Hunt.hunts.removeHunt(hunt.getId(), false);
 			}

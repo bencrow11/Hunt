@@ -4,10 +4,7 @@ import com.cobblemon.mod.common.pokemon.Pokemon;
 import org.pokesplash.hunt.Hunt;
 import org.pokesplash.hunt.util.Utils;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.HashMap;
-import java.util.UUID;
+import java.util.*;
 
 public class CurrentHunts {
 	private HashMap<UUID, SingleHunt> hunts; // List of current hunts.
@@ -38,7 +35,7 @@ public class CurrentHunts {
 			SingleHunt hunt = new SingleHunt();
 
 			// If the species already exists, recurse and try again.
-			ArrayList<UUID> huntIds = new ArrayList<>(hunts.keySet());
+			HashSet<UUID> huntIds = new HashSet<>(hunts.keySet());
 			for (UUID id : huntIds) {
 				if (hunts.containsKey(id)) {
 					Pokemon currentPokemon = hunts.get(id).getPokemon();
