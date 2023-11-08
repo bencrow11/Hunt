@@ -51,6 +51,8 @@ public abstract class EventHandler {
 								HuntEvents.COMPLETED.trigger(new CompletedEvent(replacedHunt.getOldHunt(), player.getUUID()));
 							}
 
+							Hunt.logs.addValue(player.getUUID(), price);
+
 							return Unit.INSTANCE;
 						}
 					} catch (NullPointerException ex) {

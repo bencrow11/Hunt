@@ -6,6 +6,7 @@ import org.apache.logging.log4j.Logger;
 import org.pokesplash.hunt.command.basecommand.HuntCommand;
 import org.pokesplash.hunt.config.Config;
 import org.pokesplash.hunt.config.Lang;
+import org.pokesplash.hunt.config.Logs;
 import org.pokesplash.hunt.event.EventHandler;
 import org.pokesplash.hunt.hunts.CurrentHunts;
 import org.pokesplash.hunt.hunts.SpawnRates;
@@ -22,6 +23,7 @@ public class Hunt
 	public static SpawnRates spawnRates = new SpawnRates();
 	public static CurrentHunts hunts = new CurrentHunts();
 	public static Lang language = new Lang();
+	public static final Logs logs = new Logs();
 	public static MinecraftServer server;
 
 	public static void init() {
@@ -38,5 +40,6 @@ public class Hunt
 		spawnRates.init();
 		hunts.init();
 		language.init();
+		logs.init();
 	}
 }
