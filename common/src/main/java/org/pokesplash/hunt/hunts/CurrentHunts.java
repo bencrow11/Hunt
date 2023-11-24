@@ -2,7 +2,8 @@ package org.pokesplash.hunt.hunts;
 
 import com.cobblemon.mod.common.pokemon.Pokemon;
 import com.cobblemon.mod.common.pokemon.Species;
-import it.unimi.dsi.fastutil.Hash;
+import net.minecraft.network.chat.Component;
+import net.minecraft.server.level.ServerPlayer;
 import org.pokesplash.hunt.Hunt;
 import org.pokesplash.hunt.util.Utils;
 
@@ -10,13 +11,15 @@ import java.util.HashMap;
 import java.util.UUID;
 
 public class CurrentHunts {
+	private final UUID owner; // The owner of the current hunts.
 	private HashMap<UUID, SingleHunt> hunts; // List of current hunts.
 	private HashMap<UUID, Species> species; // List of species.
 
 	/**
 	 * Constructor that generates a bunch of hunts when the server starts.
 	 */
-	public CurrentHunts() {
+	public CurrentHunts(UUID owner) {
+		this.owner = owner;
 		hunts = new HashMap<>();
 		species = new HashMap<>();
 	}
@@ -25,6 +28,10 @@ public class CurrentHunts {
 	 * Initializes hashmap with hunts.
 	 */
 	public void init() {
+		if (owner == null && Hunt.config.isIndividualHunts()) {
+			return;
+		}
+
 		for (int x=0; x < Hunt.config.getHuntAmount(); x++) {
 			addHunt();
 		}
@@ -37,7 +44,7 @@ public class CurrentHunts {
 	public SingleHunt addHunt() {
 		// If the maximum hunt amount is reached, don't add another.
 		if (hunts.size() < Hunt.config.getHuntAmount()) {
-			SingleHunt hunt = new SingleHunt();
+			SingleHunt hunt = new SingleHunt(owner);
 
 			// If the species already exists, recurse and try again.
 //			HashSet<UUID> huntIds = new HashSet<>(hunts.keySet());
@@ -57,11 +64,34 @@ public class CurrentHunts {
 			}
 
 			// If the config setting is enabled, send the broadcast.
-			if (Hunt.config.isSendHuntBeginMessage()) {
-				Utils.broadcastMessage(Utils.formatPlaceholders(
-						Hunt.language.getNewHuntMessage(), null, hunt.getPokemon(), hunt.getPrice()
-				));
+
+			if (Hunt.config.isIndividualHunts()) {
+				ServerPlayer player = owner == null ? null : Hunt.server.getPlayerList().getPlayer(owner);
+				if (owner != null &&
+						player != null &&
+				Hunt.permissions.hasPermission(player,
+						Hunt.permissions.getPermission("HuntNotify"))) {
+					Hunt.server.getPlayerList().getPlayer(owner).sendSystemMessage(
+							Component.literal(
+									Utils.formatPlaceholders(
+											Hunt.language.getNewHuntMessage(), null, hunt.getPokemon(), hunt.getPrice()
+									)
+							)
+					);
+				}
+
+			} else {
+				if (Hunt.config.isSendHuntBeginMessage()) {
+					Utils.broadcastMessage(Utils.formatPlaceholders(
+							Hunt.language.getNewHuntMessage(), null, hunt.getPokemon(), hunt.getPrice()
+					));
+				}
 			}
+
+
+
+
+
 
 			species.put(hunt.getId(), hunt.getPokemon().getSpecies());
 
@@ -83,11 +113,27 @@ public class CurrentHunts {
 			removedHunt.getTimer().cancel(); // Cancel timer on hunt.
 
 			// If broadcasts are enabled and the method call wants it broadcast, send it.
-			if (Hunt.config.isSendHuntEndMessage() && broadcast) {
-				Utils.broadcastMessage(Utils.formatPlaceholders(
-						Hunt.language.getEndedHuntMessage(), null, removedHunt.getPokemon(), removedHunt.getPrice()
-				));
+			if (Hunt.config.isIndividualHunts()) {
+				if (owner != null &&
+						Hunt.permissions.hasPermission(Hunt.server.getPlayerList().getPlayer(owner),
+								Hunt.permissions.getPermission("HuntNotify"))) {
+					Hunt.server.getPlayerList().getPlayer(owner).sendSystemMessage(
+							Component.literal(
+									Utils.formatPlaceholders(
+											Hunt.language.getEndedHuntMessage(), null, removedHunt.getPokemon(),
+											removedHunt.getPrice()
+									)
+							)
+					);
+				}
+			} else {
+				if (Hunt.config.isSendHuntEndMessage() && broadcast) {
+					Utils.broadcastMessage(Utils.formatPlaceholders(
+							Hunt.language.getEndedHuntMessage(), null, removedHunt.getPokemon(), removedHunt.getPrice()
+					));
+				}
 			}
+
 		}
 		return removedHunt;
 	}

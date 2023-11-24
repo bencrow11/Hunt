@@ -21,6 +21,7 @@ public class Permissions {
 		permissions = new HashMap<>();
 		// Add you permissions here.
 		createPermission("HuntBase", "hunt.base", 1);
+		createPermission("HuntNotify", "hunt.notify", 1);
 		createPermission("HuntReload", "hunt.reload", 2);
 		createPermission("HuntDebug", "hunt.debug", 2);
 	}

@@ -53,9 +53,11 @@ public class HuntCommand extends BaseCommand {
 		 *  Creates the UI
 		 */
 
-
 		List<Button> hunts = new ArrayList<>();
-		for (SingleHunt hunt : Hunt.hunts.getHunts().values()) {
+		for (SingleHunt hunt :
+				Hunt.config.isIndividualHunts() ?
+						Hunt.manager.getPlayerHunts(sender.getUUID()).getHunts().values() :
+						Hunt.hunts.getHunts().values()) {
 			Collection<Component> lore = new ArrayList<>();
 
 			Style aqua = Style.EMPTY.withColor(TextColor.parseColor("aqua"));

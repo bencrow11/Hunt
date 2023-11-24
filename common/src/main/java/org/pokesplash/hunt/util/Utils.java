@@ -9,6 +9,7 @@ import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.item.ItemStack;
 import org.pokesplash.hunt.Hunt;
+import org.pokesplash.hunt.hunts.CurrentHunts;
 import org.pokesplash.hunt.hunts.SingleHunt;
 
 import java.io.File;
@@ -292,12 +293,25 @@ public abstract class Utils {
 	}
 
 	public static void removeAllHunts() {
-		ArrayList<SingleHunt> copy = (ArrayList<SingleHunt>) new ArrayList<>(Hunt.hunts.getHunts().values()).clone();
-		for (SingleHunt hunt : copy) {
-			if (hunt != null) {
-//				Hunt.hunts.removeHunt(hunt.getId(), false);
-				hunt.getTimer().cancel();
+
+		if (Hunt.config.isIndividualHunts()) {
+			for (UUID player : Hunt.manager.getPlayers()) {
+				ArrayList<SingleHunt> copy =
+						(ArrayList<SingleHunt>) new ArrayList<>(Hunt.manager.getPlayerHunts(player).getHunts().values()).clone();
+				for (SingleHunt hunt : copy) {
+					if (hunt != null) {
+						hunt.getTimer().cancel();
+					}
+				}
+			}
+		} else {
+			ArrayList<SingleHunt> copy = (ArrayList<SingleHunt>) new ArrayList<>(Hunt.hunts.getHunts().values()).clone();
+			for (SingleHunt hunt : copy) {
+				if (hunt != null) {
+					hunt.getTimer().cancel();
+				}
 			}
 		}
+
 	}
 }

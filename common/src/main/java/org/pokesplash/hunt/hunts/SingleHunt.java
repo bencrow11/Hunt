@@ -10,15 +10,18 @@ import java.text.DecimalFormat;
 public class SingleHunt {
 
 	private final UUID id; // Unique ID to reference hunt by.
+	private final UUID owner; // Player who owns the hunt
 	private double price; // hunt prize amount.
 	private Pokemon pokemon; // Pokemon being hunted.
 	private final Timer timer; // Timer for hunt.
 	private final long endtime; // The end date for the hunt.
 //	private final String nature;
 
-	public SingleHunt() {
+	public SingleHunt(UUID owner) {
 		// Creates unique ID and generates random pokemon.
 		id = UUID.randomUUID();
+		this.owner = owner;
+
 		pokemon = new Pokemon();
 
 		float rarity = Hunt.spawnRates.getRarity(pokemon);
@@ -71,7 +74,11 @@ public class SingleHunt {
 		timer.schedule(new TimerTask() {
 			@Override
 			public void run() {
-				Hunt.hunts.replaceHunt(id, true);
+				if (Hunt.config.isIndividualHunts()) {
+					Hunt.manager.getPlayerHunts(owner).replaceHunt(id, true);
+				} else {
+					Hunt.hunts.replaceHunt(id, true);
+				}
 			}
 		}, duration);
 

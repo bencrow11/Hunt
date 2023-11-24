@@ -9,6 +9,7 @@ import org.pokesplash.hunt.config.Lang;
 import org.pokesplash.hunt.config.Logs;
 import org.pokesplash.hunt.event.EventHandler;
 import org.pokesplash.hunt.hunts.CurrentHunts;
+import org.pokesplash.hunt.hunts.HuntManager;
 import org.pokesplash.hunt.hunts.SpawnRates;
 import org.pokesplash.hunt.util.CommandsRegistry;
 import org.pokesplash.hunt.util.Permissions;
@@ -21,7 +22,8 @@ public class Hunt
 	public static Config config = new Config();
 	public static final Permissions permissions = new Permissions();
 	public static SpawnRates spawnRates = new SpawnRates();
-	public static CurrentHunts hunts = new CurrentHunts();
+	public static CurrentHunts hunts = new CurrentHunts(null);
+	public static HuntManager manager = new HuntManager();
 	public static Lang language = new Lang();
 	public static final Logs logs = new Logs();
 	public static MinecraftServer server;
@@ -38,8 +40,13 @@ public class Hunt
 	public static void load() {
 		config.init();
 		spawnRates.init();
-		hunts.init();
+		if (!config.isIndividualHunts()) {
+			hunts.init();
+		} else {
+
+		}
 		language.init();
 		logs.init();
+		manager.init();
 	}
 }

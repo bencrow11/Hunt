@@ -23,11 +23,23 @@ public abstract class EventHandler {
 			ServerPlayer player = e.getPlayer();
 			Pokemon pokemon = e.getPokemon();
 
-			UUID matchedUUID = Hunt.hunts.matches(pokemon);
+			UUID matchedUUID;
+
+			if (Hunt.config.isIndividualHunts()) {
+				matchedUUID = Hunt.manager.getPlayerHunts(player.getUUID()).matches(pokemon);
+			} else {
+				matchedUUID = Hunt.hunts.matches(pokemon);
+			}
 
 			// If the pokemon doesn't match a hunt pokemon, matchedUUID will be null, otherwise it'll be a UUID.
 			if (matchedUUID != null) {
-				double price = Hunt.hunts.getPrice(matchedUUID);
+				double price;
+
+				if (Hunt.config.isIndividualHunts()) {
+					price = Hunt.manager.getPlayerHunts(player.getUUID()).getPrice(matchedUUID);
+				} else {
+					price = Hunt.hunts.getPrice(matchedUUID);
+				}
 
 				// Checks there's a price. This should always be true.
 				if (price != -1) {
@@ -37,7 +49,14 @@ public abstract class EventHandler {
 
 						// If the transaction was successful, replace the caught pokemon in hunt and send some messages.
 						if (success) {
-							ReplacedHunt replacedHunt = Hunt.hunts.replaceHunt(matchedUUID, false);
+
+							ReplacedHunt replacedHunt;
+							if (Hunt.config.isIndividualHunts()) {
+								replacedHunt = Hunt.manager.getPlayerHunts(player.getUUID())
+										.replaceHunt(matchedUUID, false);
+							} else {
+								replacedHunt = Hunt.hunts.replaceHunt(matchedUUID, false);
+							}
 
 							player.sendSystemMessage(Component.literal(Utils.formatPlaceholders(
 									Hunt.language.getPayMessage(), player, pokemon, price
@@ -66,5 +85,4 @@ public abstract class EventHandler {
 			return Unit.INSTANCE;
 		});
 	}
-
 }

@@ -11,6 +11,7 @@ import java.util.concurrent.CompletableFuture;
  * Config file.
  */
 public class Config {
+	private boolean individualHunts; // if hunts should be individual for each player.
 	private boolean sendHuntEndMessage; // Should the mod send a message when a hunt ends.
 	private boolean sendHuntBeginMessage; // Should the mod send a message when a hunt begins.
 	private int huntDuration; // How long each hunt should last, in minutes.
@@ -27,6 +28,7 @@ public class Config {
 	private ArrayList<String> blacklist; // List if Pokemon that shouldn't be added to Hunt.
 
 	public Config() {
+		individualHunts = false;
 		sendHuntEndMessage = true;
 		sendHuntBeginMessage = true;
 		huntDuration = 60;
@@ -60,6 +62,7 @@ public class Config {
 					} else {
 						huntAmount = cfg.getHuntAmount();
 					}
+					individualHunts = cfg.isIndividualHunts();
 					sendHuntEndMessage = cfg.isSendHuntEndMessage();
 					sendHuntBeginMessage = cfg.isSendHuntBeginMessage();
 					commonPokemonRarity = cfg.getCommonPokemonRarity();
@@ -91,9 +94,14 @@ public class Config {
 		Hunt.LOGGER.info("Hunt config file read successfully.");
 	}
 
+
 	/**
 	 * Bunch of Getters
 	 */
+
+	public boolean isIndividualHunts() {
+		return individualHunts;
+	}
 
 	public int getHuntDuration() {
 		return huntDuration;
