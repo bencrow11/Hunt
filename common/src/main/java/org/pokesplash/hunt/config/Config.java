@@ -24,6 +24,7 @@ public class Config {
 	private float ultraRarePokemonPrice; // What price should any pokemon less than rare be
 	private Properties matchProperties; // What properties should be checked to complete the hunt.
 	private ArrayList<CustomPrice> customPrices; // List of custom prices.
+	private ArrayList<String> blacklist; // List if Pokemon that shouldn't be added to Hunt.
 
 	public Config() {
 		sendHuntEndMessage = true;
@@ -40,6 +41,7 @@ public class Config {
 		matchProperties = new Properties();
 		customPrices = new ArrayList<>();
 		customPrices.add(new CustomPrice());
+		blacklist = new ArrayList<>();
 	}
 
 	/**
@@ -69,6 +71,7 @@ public class Config {
 					ultraRarePokemonPrice = cfg.getUltraRarePokemonPrice();
 					matchProperties = cfg.getMatchProperties();
 					customPrices = cfg.getCustomPrices();
+					blacklist = cfg.getBlacklist();
 				});
 
 		// If the config couldn't be read, write a new one.
@@ -142,5 +145,9 @@ public class Config {
 
 	public boolean isSendHuntBeginMessage() {
 		return sendHuntBeginMessage;
+	}
+
+	public ArrayList<String> getBlacklist() {
+		return blacklist;
 	}
 }

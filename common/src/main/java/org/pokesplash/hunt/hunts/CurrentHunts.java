@@ -1,19 +1,24 @@
 package org.pokesplash.hunt.hunts;
 
 import com.cobblemon.mod.common.pokemon.Pokemon;
+import com.cobblemon.mod.common.pokemon.Species;
+import it.unimi.dsi.fastutil.Hash;
 import org.pokesplash.hunt.Hunt;
 import org.pokesplash.hunt.util.Utils;
 
-import java.util.*;
+import java.util.HashMap;
+import java.util.UUID;
 
 public class CurrentHunts {
 	private HashMap<UUID, SingleHunt> hunts; // List of current hunts.
+	private HashMap<UUID, Species> species; // List of species.
 
 	/**
 	 * Constructor that generates a bunch of hunts when the server starts.
 	 */
 	public CurrentHunts() {
 		hunts = new HashMap<>();
+		species = new HashMap<>();
 	}
 
 	/**
@@ -35,14 +40,20 @@ public class CurrentHunts {
 			SingleHunt hunt = new SingleHunt();
 
 			// If the species already exists, recurse and try again.
-			HashSet<UUID> huntIds = new HashSet<>(hunts.keySet());
-			for (UUID id : huntIds) {
-				if (hunts.containsKey(id)) {
-					Pokemon currentPokemon = hunts.get(id).getPokemon();
-					if (currentPokemon.getSpecies().getName().equalsIgnoreCase(hunt.getPokemon().getSpecies().getName())) {
-						return addHunt();
-					}
-				}
+//			HashSet<UUID> huntIds = new HashSet<>(hunts.keySet());
+//			for (UUID id : huntIds) {
+//				if (hunts.containsKey(id)) {
+//					Pokemon currentPokemon = hunts.get(id).getPokemon();
+//					if (currentPokemon.getSpecies().getName().equalsIgnoreCase(hunt.getPokemon().getSpecies().getName())) {
+//						return addHunt();
+//					}
+//				}
+//			}
+
+			// If a species matches, add hunt again.
+			if (species.containsValue(hunt.getPokemon().getSpecies()) ||
+			Hunt.config.getBlacklist().contains(hunt.getPokemon().getSpecies().getName())) {
+				return addHunt();
 			}
 
 			// If the config setting is enabled, send the broadcast.
@@ -51,6 +62,8 @@ public class CurrentHunts {
 						Hunt.language.getNewHuntMessage(), null, hunt.getPokemon(), hunt.getPrice()
 				));
 			}
+
+			species.put(hunt.getId(), hunt.getPokemon().getSpecies());
 
 			// Add the hunt to the list.
 			return hunts.put(hunt.getId(), hunt);
@@ -66,6 +79,7 @@ public class CurrentHunts {
 	public SingleHunt removeHunt(UUID id, boolean broadcast) {
 		SingleHunt removedHunt = hunts.remove(id);
 		if (removedHunt != null) {
+			species.remove(id);
 			removedHunt.getTimer().cancel(); // Cancel timer on hunt.
 
 			// If broadcasts are enabled and the method call wants it broadcast, send it.

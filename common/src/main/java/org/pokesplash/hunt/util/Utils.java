@@ -295,7 +295,8 @@ public abstract class Utils {
 		ArrayList<SingleHunt> copy = (ArrayList<SingleHunt>) new ArrayList<>(Hunt.hunts.getHunts().values()).clone();
 		for (SingleHunt hunt : copy) {
 			if (hunt != null) {
-				Hunt.hunts.removeHunt(hunt.getId(), false);
+//				Hunt.hunts.removeHunt(hunt.getId(), false);
+				hunt.getTimer().cancel();
 			}
 		}
 	}

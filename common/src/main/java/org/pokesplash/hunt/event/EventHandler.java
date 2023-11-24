@@ -63,7 +63,6 @@ public abstract class EventHandler {
 				// If any errors occur, send log to console.
 				Hunt.LOGGER.error("Could not process hunt " + matchedUUID + " for " + player.getName().getString());
 			}
-
 			return Unit.INSTANCE;
 		});
 	}
