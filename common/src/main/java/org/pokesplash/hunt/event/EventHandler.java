@@ -62,9 +62,11 @@ public abstract class EventHandler {
 									Hunt.language.getPayMessage(), player, pokemon, price
 							)));
 
-							Utils.broadcastMessage(Utils.formatPlaceholders(
-									Hunt.language.getCaptureHuntBroadcast(), player, pokemon, price
-							));
+							if (!Hunt.config.isIndividualHunts()) {
+								Utils.broadcastMessage(Utils.formatPlaceholders(
+										Hunt.language.getCaptureHuntBroadcast(), player, pokemon, price
+								));
+							}
 
 							if (replacedHunt != null) {
 								HuntEvents.COMPLETED.trigger(new CompletedEvent(replacedHunt.getOldHunt(), player.getUUID()));
