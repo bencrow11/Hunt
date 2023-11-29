@@ -16,13 +16,8 @@ public class Config {
 	private boolean sendHuntBeginMessage; // Should the mod send a message when a hunt begins.
 	private int huntDuration; // How long each hunt should last, in minutes.
 	private int huntAmount; // How many hunts should there be at once.
-	private float commonPokemonRarity; // What rarity is classed as common.
-	private float uncommonPokemonRarity; // What rarity is classed as uncommon.
-	private float rarePokemonRarity; // What rarity is classed as rare.
-	private float commonPokemonPrice; // What price should common pokemon be
-	private float uncommonPokemonPrice; // What price should uncommon pokemon be
-	private float rarePokemonPrice; // What price should rare pokemon be
-	private float ultraRarePokemonPrice; // What price should any pokemon less than rare be
+	private RarityConfig rarity; // The rarity borders.
+	private RewardsConfig rewards; // The rewards for the hunts.
 	private Properties matchProperties; // What properties should be checked to complete the hunt.
 	private ArrayList<CustomPrice> customPrices; // List of custom prices.
 	private ArrayList<String> blacklist; // List if Pokemon that shouldn't be added to Hunt.
@@ -33,13 +28,8 @@ public class Config {
 		sendHuntBeginMessage = true;
 		huntDuration = 60;
 		huntAmount = 7;
-		commonPokemonRarity = 7;
-		uncommonPokemonRarity = 2.5F;
-		rarePokemonRarity = 0.3F;
-		commonPokemonPrice = 100;
-		uncommonPokemonPrice = 500;
-		rarePokemonPrice = 700;
-		ultraRarePokemonPrice = 1000;
+		rarity = new RarityConfig();
+		rewards = new RewardsConfig();
 		matchProperties = new Properties();
 		customPrices = new ArrayList<>();
 		customPrices.add(new CustomPrice());
@@ -65,16 +55,11 @@ public class Config {
 					individualHunts = cfg.isIndividualHunts();
 					sendHuntEndMessage = cfg.isSendHuntEndMessage();
 					sendHuntBeginMessage = cfg.isSendHuntBeginMessage();
-					commonPokemonRarity = cfg.getCommonPokemonRarity();
-					uncommonPokemonRarity = cfg.getUncommonPokemonRarity();
-					rarePokemonRarity = cfg.getRarePokemonRarity();
-					commonPokemonPrice = cfg.getCommonPokemonPrice();
-					uncommonPokemonPrice = cfg.getUncommonPokemonPrice();
-					rarePokemonPrice = cfg.getRarePokemonPrice();
-					ultraRarePokemonPrice = cfg.getUltraRarePokemonPrice();
 					matchProperties = cfg.getMatchProperties();
 					customPrices = cfg.getCustomPrices();
 					blacklist = cfg.getBlacklist();
+					rarity = cfg.getRarity();
+					rewards = cfg.getRewards();
 				});
 
 		// If the config couldn't be read, write a new one.
@@ -111,33 +96,6 @@ public class Config {
 		return huntAmount;
 	}
 
-	public float getCommonPokemonRarity() {
-		return commonPokemonRarity;
-	}
-
-	public float getUncommonPokemonRarity() {
-		return uncommonPokemonRarity;
-	}
-
-	public float getRarePokemonRarity() {
-		return rarePokemonRarity;
-	}
-
-	public float getCommonPokemonPrice() {
-		return commonPokemonPrice;
-	}
-
-	public float getUncommonPokemonPrice() {
-		return uncommonPokemonPrice;
-	}
-
-	public float getRarePokemonPrice() {
-		return rarePokemonPrice;
-	}
-
-	public float getUltraRarePokemonPrice() {
-		return ultraRarePokemonPrice;
-	}
 
 	public Properties getMatchProperties() {
 		return matchProperties;
@@ -157,5 +115,13 @@ public class Config {
 
 	public ArrayList<String> getBlacklist() {
 		return blacklist;
+	}
+
+	public RarityConfig getRarity() {
+		return rarity;
+	}
+
+	public RewardsConfig getRewards() {
+		return rewards;
 	}
 }

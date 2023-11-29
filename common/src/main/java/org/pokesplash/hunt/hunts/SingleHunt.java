@@ -12,6 +12,7 @@ public class SingleHunt {
 	private final UUID id; // Unique ID to reference hunt by.
 	private final UUID owner; // Player who owns the hunt
 	private double price; // hunt prize amount.
+	private ArrayList<String> commands; // Commands for completing the hunt.
 	private Pokemon pokemon; // Pokemon being hunted.
 	private final Timer timer; // Timer for hunt.
 	private final long endtime; // The end date for the hunt.
@@ -55,14 +56,18 @@ public class SingleHunt {
 		// If a custom price is found, don't run this.
 		if (!hasCustom) {
 			// Sets the price based on the rarity.
-			if (rarity >= Hunt.config.getCommonPokemonRarity()) {
-				price = Hunt.config.getCommonPokemonPrice();
-			} else if (rarity >= Hunt.config.getUncommonPokemonRarity()) {
-				price = Hunt.config.getUncommonPokemonPrice();
-			} else if (rarity >= Hunt.config.getRarePokemonRarity()) {
-				price = Hunt.config.getRarePokemonPrice();
+			if (rarity >= Hunt.config.getRarity().getCommonPokemonRarity()) {
+				price = Hunt.config.getRewards().getCommon().getPrice();
+				commands = Hunt.config.getRewards().getCommon().getCommands();
+			} else if (rarity >= Hunt.config.getRarity().getUncommonPokemonRarity()) {
+				price = Hunt.config.getRewards().getUncommon().getPrice();
+				commands = Hunt.config.getRewards().getUncommon().getCommands();
+			} else if (rarity >= Hunt.config.getRarity().getRarePokemonRarity()) {
+				price = Hunt.config.getRewards().getRare().getPrice();
+				commands = Hunt.config.getRewards().getRare().getCommands();
 			} else {
-				price = Hunt.config.getUltraRarePokemonPrice();
+				price = Hunt.config.getRewards().getUltraRare().getPrice();
+				commands = Hunt.config.getRewards().getUltraRare().getCommands();
 			}
 		}
 		pokemon.checkAbility();
@@ -112,6 +117,10 @@ public class SingleHunt {
 	}
 	public long getEndtime() {
 		return endtime;
+	}
+
+	public ArrayList<String> getCommands() {
+		return commands;
 	}
 
 	/**

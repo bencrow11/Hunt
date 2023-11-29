@@ -3,6 +3,10 @@ package org.pokesplash.hunt.util;
 import com.cobblemon.mod.common.pokemon.Pokemon;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
+import com.mojang.brigadier.CommandDispatcher;
+import com.mojang.brigadier.exceptions.CommandSyntaxException;
+import net.minecraft.commands.CommandSource;
+import net.minecraft.commands.CommandSourceStack;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
 import net.minecraft.server.MinecraftServer;
@@ -312,6 +316,20 @@ public abstract class Utils {
 				}
 			}
 		}
+	}
 
+	public static void runCommands(ArrayList<String> commands, ServerPlayer player, Pokemon pokemon, double price) {
+		// Run commands
+		CommandDispatcher<CommandSourceStack> dispatcher =
+				Hunt.server.getCommands().getDispatcher();
+		for (String command : commands) {
+			try {
+				dispatcher.execute(
+						Utils.formatPlaceholders(command, player, pokemon, price),
+						Hunt.server.createCommandSourceStack());
+			} catch (CommandSyntaxException ex) {
+				throw new RuntimeException(ex);
+			}
+		}
 	}
 }

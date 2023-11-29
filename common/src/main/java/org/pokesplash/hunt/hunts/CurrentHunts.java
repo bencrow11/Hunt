@@ -38,6 +38,15 @@ public class CurrentHunts {
 	}
 
 	/**
+	 * Gets a hunt with the given UUID.
+	 * @param uuid the UUID of the hunt to fetch.
+	 * @return the hunt or null.
+	 */
+	public SingleHunt getHunt(UUID uuid) {
+		return hunts.get(uuid);
+	}
+
+	/**
 	 * Adds a new hunt to the current hunts.
 	 * @return true if successful.
 	 */
@@ -45,17 +54,6 @@ public class CurrentHunts {
 		// If the maximum hunt amount is reached, don't add another.
 		if (hunts.size() < Hunt.config.getHuntAmount()) {
 			SingleHunt hunt = new SingleHunt(owner);
-
-			// If the species already exists, recurse and try again.
-//			HashSet<UUID> huntIds = new HashSet<>(hunts.keySet());
-//			for (UUID id : huntIds) {
-//				if (hunts.containsKey(id)) {
-//					Pokemon currentPokemon = hunts.get(id).getPokemon();
-//					if (currentPokemon.getSpecies().getName().equalsIgnoreCase(hunt.getPokemon().getSpecies().getName())) {
-//						return addHunt();
-//					}
-//				}
-//			}
 
 			// If a species matches, add hunt again.
 			if (species.containsValue(hunt.getPokemon().getSpecies()) ||
@@ -88,11 +86,6 @@ public class CurrentHunts {
 				}
 			}
 
-
-
-
-
-
 			species.put(hunt.getId(), hunt.getPokemon().getSpecies());
 
 			// Add the hunt to the list.
@@ -115,6 +108,7 @@ public class CurrentHunts {
 			// If broadcasts are enabled and the method call wants it broadcast, send it.
 			if (Hunt.config.isIndividualHunts()) {
 				if (owner != null &&
+						Hunt.server.getPlayerList().getPlayer(owner) != null &&
 						Hunt.permissions.hasPermission(Hunt.server.getPlayerList().getPlayer(owner),
 								Hunt.permissions.getPermission("HuntNotify"))) {
 					Hunt.server.getPlayerList().getPlayer(owner).sendSystemMessage(

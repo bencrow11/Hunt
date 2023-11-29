@@ -10,9 +10,11 @@ import org.pokesplash.hunt.Hunt;
 import org.pokesplash.hunt.api.event.HuntEvents;
 import org.pokesplash.hunt.api.event.events.CompletedEvent;
 import org.pokesplash.hunt.hunts.ReplacedHunt;
+import org.pokesplash.hunt.hunts.SingleHunt;
 import org.pokesplash.hunt.util.ImpactorService;
 import org.pokesplash.hunt.util.Utils;
 
+import java.util.ArrayList;
 import java.util.UUID;
 
 public abstract class EventHandler {
@@ -33,19 +35,24 @@ public abstract class EventHandler {
 
 			// If the pokemon doesn't match a hunt pokemon, matchedUUID will be null, otherwise it'll be a UUID.
 			if (matchedUUID != null) {
-				double price;
+				SingleHunt hunt;
 
 				if (Hunt.config.isIndividualHunts()) {
-					price = Hunt.manager.getPlayerHunts(player.getUUID()).getPrice(matchedUUID);
+					hunt = Hunt.manager.getPlayerHunts(player.getUUID()).getHunt(matchedUUID);
 				} else {
-					price = Hunt.hunts.getPrice(matchedUUID);
+					hunt = Hunt.hunts.getHunt(matchedUUID);
 				}
+
+				double price = hunt.getPrice();
 
 				// Checks there's a price. This should always be true.
 				if (price != -1) {
 					try {
 						// Performs the transaction.
 						boolean success = ImpactorService.add(ImpactorService.getAccount(player.getUUID()), price);
+
+						// Runs commands
+						Utils.runCommands(hunt.getCommands(), player, pokemon, price);
 
 						// If the transaction was successful, replace the caught pokemon in hunt and send some messages.
 						if (success) {
