@@ -3,7 +3,6 @@ package org.pokesplash.hunt.hunts;
 import net.minecraft.server.level.ServerPlayer;
 import org.pokesplash.hunt.Hunt;
 
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.UUID;

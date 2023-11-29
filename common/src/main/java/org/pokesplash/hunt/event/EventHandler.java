@@ -14,7 +14,6 @@ import org.pokesplash.hunt.hunts.SingleHunt;
 import org.pokesplash.hunt.util.ImpactorService;
 import org.pokesplash.hunt.util.Utils;
 
-import java.util.ArrayList;
 import java.util.UUID;
 
 public abstract class EventHandler {

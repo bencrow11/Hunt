@@ -4,8 +4,8 @@ import com.cobblemon.mod.common.pokemon.Pokemon;
 import org.pokesplash.hunt.Hunt;
 import org.pokesplash.hunt.config.CustomPrice;
 
-import java.util.*;
 import java.text.DecimalFormat;
+import java.util.*;
 
 public class SingleHunt {
 
