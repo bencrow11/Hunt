@@ -4,7 +4,6 @@ import com.google.gson.Gson;
 import org.pokesplash.hunt.Hunt;
 import org.pokesplash.hunt.util.Utils;
 
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.UUID;
 import java.util.concurrent.CompletableFuture;
