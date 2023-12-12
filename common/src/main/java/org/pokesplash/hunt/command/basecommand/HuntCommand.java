@@ -106,7 +106,9 @@ public class HuntCommand extends BaseCommand {
 								.setStyle(Style.EMPTY.withColor(TextColor.parseColor("light_purple")))));
 			}
 
-			lore.add(Component.literal(Hunt.language.getReward() + hunt.getPriceAsString()));
+			if (hunt.getPrice() > 0) {
+				lore.add(Component.literal(Hunt.language.getReward() + hunt.getPriceAsString()));
+			}
 
 			lore.add(Component.literal(Hunt.language.getTimeRemaining() + Utils.parseLongDate(hunt.getEndtime() - new Date().getTime())));
 

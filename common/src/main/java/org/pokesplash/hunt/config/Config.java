@@ -124,4 +124,11 @@ public class Config {
 	public RewardsConfig getRewards() {
 		return rewards;
 	}
+
+	public boolean blacklistContains(String pokemon) {
+		for (String name : blacklist) {
+			if (name.equalsIgnoreCase(pokemon)) return true;
+		}
+		return false;
+	}
 }

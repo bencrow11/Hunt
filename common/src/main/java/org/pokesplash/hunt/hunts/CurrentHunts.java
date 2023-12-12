@@ -57,7 +57,7 @@ public class CurrentHunts {
 
 			// If a species matches, add hunt again.
 			if (species.containsValue(hunt.getPokemon().getSpecies()) ||
-			Hunt.config.getBlacklist().contains(hunt.getPokemon().getSpecies().getName())) {
+			Hunt.config.blacklistContains(hunt.getPokemon().getSpecies().getName())) {
 				return addHunt();
 			}
 

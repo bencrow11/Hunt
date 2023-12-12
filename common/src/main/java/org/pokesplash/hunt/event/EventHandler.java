@@ -44,51 +44,50 @@ public abstract class EventHandler {
 
 				double price = hunt.getPrice();
 
-				// Checks there's a price. This should always be true.
-				if (price != -1) {
+				ReplacedHunt replacedHunt;
+				if (Hunt.config.isIndividualHunts()) {
+					replacedHunt = Hunt.manager.getPlayerHunts(player.getUUID())
+							.replaceHunt(matchedUUID, false);
+				} else {
+					replacedHunt = Hunt.hunts.replaceHunt(matchedUUID, false);
+				}
+
+				if (!Hunt.config.isIndividualHunts()) {
+					Utils.broadcastMessage(Utils.formatPlaceholders(
+							Hunt.language.getCaptureHuntBroadcast(), player, pokemon, price
+					));
+				}
+
+				if (replacedHunt != null) {
+					HuntEvents.COMPLETED.trigger(new CompletedEvent(replacedHunt.getOldHunt(), player.getUUID()));
+				}
+
+				Hunt.logs.addValue(player.getUUID(), price);
+
+				// Checks there's a price.
+				if (price > 0) {
 					try {
 						// Performs the transaction.
 						boolean success = ImpactorService.add(ImpactorService.getAccount(player.getUUID()), price);
 
-						// Runs commands
-						Utils.runCommands(hunt.getCommands(), player, pokemon, price);
-
 						// If the transaction was successful, replace the caught pokemon in hunt and send some messages.
 						if (success) {
-
-							ReplacedHunt replacedHunt;
-							if (Hunt.config.isIndividualHunts()) {
-								replacedHunt = Hunt.manager.getPlayerHunts(player.getUUID())
-										.replaceHunt(matchedUUID, false);
-							} else {
-								replacedHunt = Hunt.hunts.replaceHunt(matchedUUID, false);
-							}
 
 							player.sendSystemMessage(Component.literal(Utils.formatPlaceholders(
 									Hunt.language.getPayMessage(), player, pokemon, price
 							)));
-
-							if (!Hunt.config.isIndividualHunts()) {
-								Utils.broadcastMessage(Utils.formatPlaceholders(
-										Hunt.language.getCaptureHuntBroadcast(), player, pokemon, price
-								));
-							}
-
-							if (replacedHunt != null) {
-								HuntEvents.COMPLETED.trigger(new CompletedEvent(replacedHunt.getOldHunt(), player.getUUID()));
-							}
-
-							Hunt.logs.addValue(player.getUUID(), price);
-
-							return Unit.INSTANCE;
 						}
 					} catch (NullPointerException ex) {
+						// If any errors occur, send log to console.
+						Hunt.LOGGER.error("Could not process hunt " + matchedUUID + " for " + player.getName().getString());
 						// Just in case playerlist is empty for some random reason.
 						ex.printStackTrace();
 					}
 				}
-				// If any errors occur, send log to console.
-				Hunt.LOGGER.error("Could not process hunt " + matchedUUID + " for " + player.getName().getString());
+
+				// Runs commands
+				Utils.runCommands(hunt.getCommands(), player, pokemon, price);
+				return Unit.INSTANCE;
 			}
 			return Unit.INSTANCE;
 		});
