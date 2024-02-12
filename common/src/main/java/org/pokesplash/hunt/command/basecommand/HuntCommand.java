@@ -17,6 +17,7 @@ import net.minecraft.network.chat.Style;
 import net.minecraft.network.chat.TextColor;
 import net.minecraft.server.level.ServerPlayer;
 import org.pokesplash.hunt.Hunt;
+import org.pokesplash.hunt.command.subcommand.RefreshCommand;
 import org.pokesplash.hunt.command.subcommand.ReloadCommand;
 import org.pokesplash.hunt.hunts.SingleHunt;
 import org.pokesplash.hunt.util.BaseCommand;
@@ -35,7 +36,8 @@ public class HuntCommand extends BaseCommand {
 	public HuntCommand() {
 		// Super needs the command, a list of aliases, permission and array of subcommands.
 		super("hunt", Arrays.asList("hunts"),
-				Hunt.permissions.getPermission("HuntBase"), Arrays.asList(new ReloadCommand()));
+				Hunt.permissions.getPermission("HuntBase"), Arrays.asList(new ReloadCommand(),
+						new RefreshCommand()));
 	}
 
 	// Runs when the base command is run with no subcommands.
