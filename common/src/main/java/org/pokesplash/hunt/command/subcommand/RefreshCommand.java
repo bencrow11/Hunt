@@ -1,5 +1,6 @@
 package org.pokesplash.hunt.command.subcommand;
 
+import ca.landonjw.gooeylibs2.api.page.Page;
 import com.mojang.brigadier.arguments.StringArgumentType;
 import com.mojang.brigadier.context.CommandContext;
 import com.mojang.brigadier.tree.LiteralCommandNode;
@@ -58,39 +59,54 @@ public class RefreshCommand extends Subcommand {
 	@Override
 	public int run(CommandContext<CommandSourceStack> context) {
 
-		String playerName = StringArgumentType.getString(context, "player");
+		try {
+			if (!Hunt.config.isIndividualHunts()) {
+				context.getSource().sendSystemMessage(Component.literal(Utils.formatMessage(
+						"§cIndividual Hunts are not active.", context.getSource().isPlayer()
+				)));
+				return 1;
+			}
 
-		if (playerName == null) {
+
+			String playerName = StringArgumentType.getString(context, "player");
+
+			if (playerName == null) {
+				context.getSource().sendSystemMessage(Component.literal(Utils.formatMessage(
+						"§cNo player was given.", context.getSource().isPlayer()
+				)));
+				return 1;
+			}
+
+			ServerPlayer player = Hunt.server.getPlayerList().getPlayerByName(playerName);
+
+			if (player == null) {
+				context.getSource().sendSystemMessage(Component.literal(Utils.formatMessage(
+						"§cPlayer " + playerName + " could not be found.", context.getSource().isPlayer()
+				)));
+				return 1;
+			}
+
+			CurrentHunts playerHunts = Hunt.manager.getPlayerHunts(player.getUUID());
+
+			Hunt.manager.addPlayer(player.getUUID()); // Adds the player if they dont exist.
+
+			Set<UUID> huntIds = new HashSet<>(playerHunts.getHunts().keySet()); // Gets the players current hunt ids.
+
+			for (UUID hunt : huntIds) {
+				playerHunts.removeHunt(hunt, false); // Removes all of the players hunts.
+			}
+
+			playerHunts.init(); // Initializes the player again.
+
 			context.getSource().sendSystemMessage(Component.literal(Utils.formatMessage(
-					"§cNo player was given.", context.getSource().isPlayer()
-			)));
-			return 1;
-		}
-
-		ServerPlayer player = Hunt.server.getPlayerList().getPlayerByName(playerName);
-
-		if (player == null) {
+					"§2Successfully refreshed " + player.getName().getString() + " hunts.",
+					context.getSource().isPlayer())));
+		} catch (Exception e) {
+			e.printStackTrace();
 			context.getSource().sendSystemMessage(Component.literal(Utils.formatMessage(
-					"§cPlayer " + playerName + " could not be found.", context.getSource().isPlayer()
-			)));
-			return 1;
+					"§cSomething went wrong.",
+					context.getSource().isPlayer())));
 		}
-
-		CurrentHunts playerHunts = Hunt.manager.getPlayerHunts(player.getUUID());
-
-		Hunt.manager.addPlayer(player.getUUID()); // Adds the player if they dont exist.
-
-		Set<UUID> huntIds = playerHunts.getHunts().keySet(); // Gets the players current hunt ids.
-
-		for (UUID hunt : huntIds) {
-			playerHunts.removeHunt(hunt, false); // Removes all of the players hunts.
-		}
-
-		playerHunts.init(); // Initializes the player again.
-
-		context.getSource().sendSystemMessage(Component.literal(Utils.formatMessage(
-				"§2Successfully refreshed " + player.getName().getString() + " hunts.",
-				context.getSource().isPlayer())));
 
 		return 1;
 	}
