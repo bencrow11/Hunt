@@ -73,7 +73,17 @@ public abstract class BaseCommand {
 
 		// Add the aliases to the base command.
 		for (String alias : aliases) {
-			dispatcher.register(Commands.literal(alias).redirect(root).executes(this::run));
+			dispatcher.register(Commands.literal(alias)
+					.requires(ctx -> {
+						if (ctx.isPlayer()) {
+							return Hunt.permissions.hasPermission(ctx.getPlayer(),
+									permission);
+						} else {
+							return true;
+						}
+					})
+					.redirect(root)
+					.executes(this::run));
 		}
 
 		// Adds subcommands to the base command.
