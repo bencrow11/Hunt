@@ -5,10 +5,12 @@ import com.cobblemon.mod.common.pokemon.Species;
 import net.minecraft.network.chat.Component;
 import net.minecraft.server.level.ServerPlayer;
 import org.pokesplash.hunt.Hunt;
+import org.pokesplash.hunt.broadcast.BroadcastType;
 import org.pokesplash.hunt.util.Utils;
 
 import java.util.HashMap;
 import java.util.UUID;
+import java.util.concurrent.TimeUnit;
 
 public class CurrentHunts {
 	private final UUID owner; // The owner of the current hunts.
@@ -33,6 +35,11 @@ public class CurrentHunts {
 		}
 
 		for (int x=0; x < Hunt.config.getHuntAmount(); x++) {
+			try {
+				TimeUnit.MILLISECONDS.sleep(50);
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
 			addHunt();
 		}
 	}
@@ -69,20 +76,14 @@ public class CurrentHunts {
 						player != null &&
 				Hunt.permissions.hasPermission(player,
 						Hunt.permissions.getPermission("HuntNotify"))) {
-					Hunt.server.getPlayerList().getPlayer(owner).sendSystemMessage(
-							Component.literal(
-									Utils.formatPlaceholders(
-											Hunt.language.getNewHuntMessage(), null, hunt.getPokemon(), hunt.getPrice()
-									)
-							)
-					);
+					Hunt.broadcaster.sendPlayerMessage(owner, BroadcastType.STARTED, null, hunt.getPokemon(),
+							hunt.getPrice());
 				}
 
 			} else {
 				if (Hunt.config.isSendHuntBeginMessage()) {
-					Utils.broadcastMessage(Utils.formatPlaceholders(
-							Hunt.language.getNewHuntMessage(), null, hunt.getPokemon(), hunt.getPrice()
-					));
+					Hunt.broadcaster.sendBroadcast(BroadcastType.STARTED, null, hunt.getPokemon(),
+							hunt.getPrice());
 				}
 			}
 
@@ -111,20 +112,13 @@ public class CurrentHunts {
 						Hunt.server.getPlayerList().getPlayer(owner) != null &&
 						Hunt.permissions.hasPermission(Hunt.server.getPlayerList().getPlayer(owner),
 								Hunt.permissions.getPermission("HuntNotify"))) {
-					Hunt.server.getPlayerList().getPlayer(owner).sendSystemMessage(
-							Component.literal(
-									Utils.formatPlaceholders(
-											Hunt.language.getEndedHuntMessage(), null, removedHunt.getPokemon(),
-											removedHunt.getPrice()
-									)
-							)
-					);
+					Hunt.broadcaster.sendPlayerMessage(owner, BroadcastType.ENDED, null, removedHunt.getPokemon(),
+							removedHunt.getPrice());
 				}
 			} else {
 				if (Hunt.config.isSendHuntEndMessage() && broadcast) {
-					Utils.broadcastMessage(Utils.formatPlaceholders(
-							Hunt.language.getEndedHuntMessage(), null, removedHunt.getPokemon(), removedHunt.getPrice()
-					));
+					Hunt.broadcaster.sendBroadcast(BroadcastType.ENDED, null, removedHunt.getPokemon(),
+							removedHunt.getPrice());
 				}
 			}
 

@@ -70,7 +70,7 @@ public class SingleHunt {
 				commands = Hunt.config.getRewards().getUltraRare().getCommands();
 			}
 		}
-		pokemon.checkAbility();
+		pokemon.rollAbility();
 		pokemon.checkGender();
 
 		// Creates the timer to replace the hunt once it is over.

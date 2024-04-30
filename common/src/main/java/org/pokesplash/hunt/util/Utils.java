@@ -286,15 +286,6 @@ public abstract class Utils {
 		return ItemStack.of(tag);
 	}
 
-	public static void broadcastMessage(String message) {
-		MinecraftServer server = Hunt.server;
-		ArrayList<ServerPlayer> players = new ArrayList<>(server.getPlayerList().getPlayers());
-
-		for (ServerPlayer pl : players) {
-			pl.sendSystemMessage(Component.literal(message));
-		}
-	}
-
 	public static void removeAllHunts() {
 
 		if (Hunt.config.isIndividualHunts()) {

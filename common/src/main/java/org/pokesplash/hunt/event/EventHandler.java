@@ -11,6 +11,7 @@ import org.pokesplash.hunt.api.event.HuntEvents;
 import org.pokesplash.hunt.api.event.events.CompletedEvent;
 import org.pokesplash.hunt.hunts.ReplacedHunt;
 import org.pokesplash.hunt.hunts.SingleHunt;
+import org.pokesplash.hunt.broadcast.BroadcastType;
 import org.pokesplash.hunt.util.ImpactorService;
 import org.pokesplash.hunt.util.Utils;
 
@@ -53,9 +54,7 @@ public abstract class EventHandler {
 				}
 
 				if (!Hunt.config.isIndividualHunts()) {
-					Utils.broadcastMessage(Utils.formatPlaceholders(
-							Hunt.language.getCaptureHuntBroadcast(), player, pokemon, price
-					));
+					Hunt.broadcaster.sendBroadcast(BroadcastType.CAPTURED, player, pokemon, price);
 				}
 
 				if (replacedHunt != null) {

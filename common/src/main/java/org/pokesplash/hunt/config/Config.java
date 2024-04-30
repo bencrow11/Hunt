@@ -11,9 +11,12 @@ import java.util.concurrent.CompletableFuture;
  * Config file.
  */
 public class Config {
+	private String version; // The version of the config.
 	private boolean individualHunts; // if hunts should be individual for each player.
 	private boolean sendHuntEndMessage; // Should the mod send a message when a hunt ends.
 	private boolean sendHuntBeginMessage; // Should the mod send a message when a hunt begins.
+	private boolean timerCooldowns; // Should the mod wait before sending the broadcasts.
+	private int bufferDuration; // The duration the buffer should wait to collect broadcasts.
 	private int huntDuration; // How long each hunt should last, in minutes.
 	private int huntAmount; // How many hunts should there be at once.
 	private RarityConfig rarity; // The rarity borders.
@@ -23,9 +26,12 @@ public class Config {
 	private ArrayList<String> blacklist; // List if Pokemon that shouldn't be added to Hunt.
 
 	public Config() {
+		version = Hunt.CONFIG_VERSION;
 		individualHunts = false;
 		sendHuntEndMessage = true;
 		sendHuntBeginMessage = true;
+		timerCooldowns = true;
+		bufferDuration = 5;
 		huntDuration = 60;
 		huntAmount = 7;
 		rarity = new RarityConfig();
@@ -44,7 +50,11 @@ public class Config {
 				el -> {
 					Gson gson = Utils.newGson();
 					Config cfg = gson.fromJson(el, Config.class);
-					huntDuration = cfg.getHuntDuration();
+
+					if (!cfg.getVersion().equals(Hunt.CONFIG_VERSION)) {
+						//TODO Fix versions (Future)
+					}
+
 
 					if (cfg.getHuntAmount() > 28) {
 						huntAmount = 28;
@@ -52,9 +62,12 @@ public class Config {
 					} else {
 						huntAmount = cfg.getHuntAmount();
 					}
+					huntDuration = cfg.getHuntDuration();
 					individualHunts = cfg.isIndividualHunts();
 					sendHuntEndMessage = cfg.isSendHuntEndMessage();
 					sendHuntBeginMessage = cfg.isSendHuntBeginMessage();
+					timerCooldowns = cfg.isTimerCooldowns();
+					bufferDuration = cfg.getBufferDuration();
 					matchProperties = cfg.getMatchProperties();
 					customPrices = cfg.getCustomPrices();
 					blacklist = cfg.getBlacklist();
@@ -80,9 +93,22 @@ public class Config {
 	}
 
 
+
+
 	/**
 	 * Bunch of Getters
 	 */
+	public String getVersion() {
+		return version;
+	}
+
+	public int getBufferDuration() {
+		return bufferDuration;
+	}
+
+	public boolean isTimerCooldowns() {
+		return timerCooldowns;
+	}
 
 	public boolean isIndividualHunts() {
 		return individualHunts;

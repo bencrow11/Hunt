@@ -40,7 +40,7 @@ public abstract class ImpactorService {
 	 * @return true if the transaction was successful.
 	 */
 	public static boolean add(Account account, double amount) {
-		EconomyTransaction transaction = account.depositAsync(new BigDecimal(amount)).join();
+		EconomyTransaction transaction = account.deposit(new BigDecimal(amount));
 
 		return transaction.successful();
 	}
@@ -52,7 +52,7 @@ public abstract class ImpactorService {
 	 * @return true if the transaction was successful.
 	 */
 	public static boolean remove(Account account, double amount) {
-		EconomyTransaction transaction = account.withdrawAsync(new BigDecimal(amount)).join();
+		EconomyTransaction transaction = account.withdraw(new BigDecimal(amount));
 
 		return transaction.successful();
 	}
@@ -65,7 +65,7 @@ public abstract class ImpactorService {
 	 * @return true if the transaction was successful.
 	 */
 	public static boolean transfer(Account sender, Account receiver, double amount) {
-		EconomyTransferTransaction transaction = sender.transferAsync(receiver, new BigDecimal(amount)).join();
+		EconomyTransferTransaction transaction = sender.transfer(receiver, new BigDecimal(amount));
 
 		return transaction.successful();
 	}
