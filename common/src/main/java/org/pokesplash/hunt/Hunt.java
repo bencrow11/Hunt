@@ -7,7 +7,7 @@ import org.pokesplash.hunt.command.basecommand.HuntCommand;
 import org.pokesplash.hunt.config.Config;
 import org.pokesplash.hunt.config.Lang;
 import org.pokesplash.hunt.config.Logs;
-import org.pokesplash.hunt.event.EventHandler;
+import org.pokesplash.hunt.event.CaptureEvent;
 import org.pokesplash.hunt.hunts.CurrentHunts;
 import org.pokesplash.hunt.hunts.HuntManager;
 import org.pokesplash.hunt.hunts.SpawnRates;
@@ -33,7 +33,7 @@ public class Hunt
 	public static void init() {
 		// Adds command to registry
 		CommandsRegistry.addCommand(new HuntCommand());
-		EventHandler.registerEvents();
+		CaptureEvent.registerEvents();
 	}
 
 	/**

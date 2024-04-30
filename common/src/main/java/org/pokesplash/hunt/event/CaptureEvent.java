@@ -17,7 +17,7 @@ import org.pokesplash.hunt.util.Utils;
 
 import java.util.UUID;
 
-public abstract class EventHandler {
+public abstract class CaptureEvent {
 	public static void registerEvents() {
 		// Capture event checks the current hunts.
 		CobblemonEvents.POKEMON_CAPTURED.subscribe(Priority.NORMAL, e -> {
