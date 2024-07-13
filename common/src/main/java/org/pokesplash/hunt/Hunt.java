@@ -10,10 +10,13 @@ import org.pokesplash.hunt.config.Logs;
 import org.pokesplash.hunt.event.CaptureEvent;
 import org.pokesplash.hunt.hunts.CurrentHunts;
 import org.pokesplash.hunt.hunts.HuntManager;
+import org.pokesplash.hunt.hunts.SingleHunt;
 import org.pokesplash.hunt.hunts.SpawnRates;
 import org.pokesplash.hunt.broadcast.Broadcaster;
 import org.pokesplash.hunt.util.CommandsRegistry;
 import org.pokesplash.hunt.util.Permissions;
+
+import java.util.UUID;
 
 public class Hunt
 {
@@ -41,13 +44,21 @@ public class Hunt
 	 */
 	public static void load() {
 		config.init();
+		language.init();
 		broadcaster.init();
 		spawnRates.init();
 		if (!config.isIndividualHunts()) {
 			hunts.init();
 		}
-		language.init();
 		logs.init();
 		manager.init();
+	}
+
+	public static void check() {
+		if (config.isIndividualHunts()) {
+			manager.getHunts().forEach(SingleHunt::check);
+		} else {
+			hunts.getHuntValues().forEach(SingleHunt::check);
+		}
 	}
 }

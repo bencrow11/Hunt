@@ -286,28 +286,6 @@ public abstract class Utils {
 		return ItemStack.of(tag);
 	}
 
-	public static void removeAllHunts() {
-
-		if (Hunt.config.isIndividualHunts()) {
-			for (UUID player : Hunt.manager.getPlayers()) {
-				ArrayList<SingleHunt> copy =
-						(ArrayList<SingleHunt>) new ArrayList<>(Hunt.manager.getPlayerHunts(player).getHunts().values()).clone();
-				for (SingleHunt hunt : copy) {
-					if (hunt != null) {
-						hunt.getTimer().cancel();
-					}
-				}
-			}
-		} else {
-			ArrayList<SingleHunt> copy = (ArrayList<SingleHunt>) new ArrayList<>(Hunt.hunts.getHunts().values()).clone();
-			for (SingleHunt hunt : copy) {
-				if (hunt != null) {
-					hunt.getTimer().cancel();
-				}
-			}
-		}
-	}
-
 	public static void runCommands(ArrayList<String> commands, ServerPlayer player, Pokemon pokemon, double price) {
 		// Run commands
 		CommandDispatcher<CommandSourceStack> dispatcher =

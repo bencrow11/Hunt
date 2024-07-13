@@ -2,6 +2,7 @@ package org.pokesplash.hunt.forge;
 
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.event.RegisterCommandsEvent;
+import net.minecraftforge.event.TickEvent;
 import net.minecraftforge.event.entity.player.PlayerEvent;
 import net.minecraftforge.event.level.LevelEvent;
 import net.minecraftforge.event.server.ServerStartedEvent;
@@ -30,11 +31,6 @@ public class HuntForge {
     }
 
     @SubscribeEvent
-    public void serverStoppingEvent(ServerStoppingEvent event) {
-        Utils.removeAllHunts();
-    }
-
-    @SubscribeEvent
     public void worldLoadEvent(LevelEvent.Load event) {
         Hunt.server = event.getLevel().getServer();
     }
@@ -42,5 +38,10 @@ public class HuntForge {
     @SubscribeEvent
     public void playerJoinEvent(PlayerEvent.PlayerLoggedInEvent event) {
         Hunt.manager.addPlayer(event.getEntity().getUUID());
+    }
+
+    @SubscribeEvent
+    public void serverTickEvent(TickEvent.ServerTickEvent event) {
+        Hunt.check();
     }
 }

@@ -8,6 +8,9 @@ import org.pokesplash.hunt.Hunt;
 import org.pokesplash.hunt.broadcast.BroadcastType;
 import org.pokesplash.hunt.util.Utils;
 
+import javax.xml.crypto.Data;
+import java.util.ArrayList;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.UUID;
 import java.util.concurrent.TimeUnit;
@@ -104,7 +107,6 @@ public class CurrentHunts {
 		SingleHunt removedHunt = hunts.remove(id);
 		if (removedHunt != null) {
 			species.remove(id);
-			removedHunt.getTimer().cancel(); // Cancel timer on hunt.
 
 			// If broadcasts are enabled and the method call wants it broadcast, send it.
 			if (Hunt.config.isIndividualHunts()) {
@@ -174,5 +176,9 @@ public class CurrentHunts {
 	 */
 	public HashMap<UUID, SingleHunt> getHunts() {
 		return hunts;
+	}
+
+	public ArrayList<SingleHunt> getHuntValues() {
+        return new ArrayList<>(hunts.values());
 	}
 }
