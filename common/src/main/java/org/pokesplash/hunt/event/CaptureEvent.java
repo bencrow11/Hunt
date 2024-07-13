@@ -85,7 +85,10 @@ public abstract class CaptureEvent {
 				}
 
 				// Runs commands
-				Utils.runCommands(hunt.getCommands(), player, pokemon, price);
+				if (hunt.getCommands() != null) {
+					Utils.runCommands(hunt.getCommands(), player, pokemon, price);
+				}
+
 				return Unit.INSTANCE;
 			}
 			return Unit.INSTANCE;

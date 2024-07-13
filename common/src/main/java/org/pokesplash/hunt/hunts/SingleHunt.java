@@ -14,9 +14,7 @@ public class SingleHunt {
 	private double price; // hunt prize amount.
 	private ArrayList<String> commands; // Commands for completing the hunt.
 	private Pokemon pokemon; // Pokemon being hunted.
-	private final Timer timer; // Timer for hunt.
 	private final long endtime; // The end date for the hunt.
-//	private final String nature;
 
 	public SingleHunt(UUID owner) {
 		// Creates unique ID and generates random pokemon.
@@ -53,6 +51,8 @@ public class SingleHunt {
 			}
 		}
 
+		commands = new ArrayList<>();
+
 		// If a custom price is found, don't run this.
 		if (!hasCustom) {
 			// Sets the price based on the rarity.
@@ -75,25 +75,33 @@ public class SingleHunt {
 
 		// Creates the timer to replace the hunt once it is over.
 		int duration = Hunt.config.getHuntDuration() * 60 * 1000;
-		timer = new Timer();
-		timer.schedule(new TimerTask() {
-			@Override
-			public void run() {
-				if (Hunt.config.isIndividualHunts()) {
-					Hunt.manager.getPlayerHunts(owner).replaceHunt(id, true);
-				} else {
-					Hunt.hunts.replaceHunt(id, true);
-				}
-			}
-		}, duration);
 
 		// Adds the endtime as the current time + the duration.
 		endtime = new Date().getTime() + duration;
 	}
 
 	/**
+	 * Checks that the hunt is still valid.
+	 */
+	public void check() {
+
+		if (endtime > new Date().getTime()) {
+			return;
+		}
+
+		if (Hunt.config.isIndividualHunts()) {
+			Hunt.manager.getPlayerHunts(owner).replaceHunt(id, true);
+		} else {
+			Hunt.hunts.replaceHunt(id, true);
+		}
+	}
+
+	/**
 	 * Getters
 	 */
+	public UUID getOwner() {
+		return owner;
+	}
 
 	public UUID getId() {
 		return id;
@@ -112,9 +120,6 @@ public class SingleHunt {
 		return pokemon;
 	}
 
-	public Timer getTimer() {
-		return timer;
-	}
 	public long getEndtime() {
 		return endtime;
 	}
