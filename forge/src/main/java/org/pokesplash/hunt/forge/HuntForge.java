@@ -1,23 +1,21 @@
 package org.pokesplash.hunt.forge;
 
-import net.minecraftforge.common.MinecraftForge;
-import net.minecraftforge.event.RegisterCommandsEvent;
-import net.minecraftforge.event.TickEvent;
-import net.minecraftforge.event.entity.player.PlayerEvent;
-import net.minecraftforge.event.level.LevelEvent;
-import net.minecraftforge.event.server.ServerStartedEvent;
-import net.minecraftforge.event.server.ServerStoppingEvent;
-import net.minecraftforge.eventbus.api.SubscribeEvent;
-import net.minecraftforge.fml.common.Mod;
+import net.neoforged.bus.api.SubscribeEvent;
+import net.neoforged.fml.common.Mod;
+import net.neoforged.neoforge.common.NeoForge;
+import net.neoforged.neoforge.event.RegisterCommandsEvent;
+import net.neoforged.neoforge.event.entity.player.PlayerEvent;
+import net.neoforged.neoforge.event.level.LevelEvent;
+import net.neoforged.neoforge.event.server.ServerStartedEvent;
+import net.neoforged.neoforge.event.tick.ServerTickEvent;
 import org.pokesplash.hunt.Hunt;
 import org.pokesplash.hunt.util.CommandsRegistry;
-import org.pokesplash.hunt.util.Utils;
 
 @Mod(Hunt.MOD_ID)
 public class HuntForge {
     public HuntForge() {
         Hunt.init();
-        MinecraftForge.EVENT_BUS.register(this);
+        NeoForge.EVENT_BUS.register(this);
     }
 
     @SubscribeEvent
@@ -41,7 +39,7 @@ public class HuntForge {
     }
 
     @SubscribeEvent
-    public void serverTickEvent(TickEvent.ServerTickEvent event) {
+    public void serverTickEvent(ServerTickEvent.Post event) {
         Hunt.check();
     }
 }

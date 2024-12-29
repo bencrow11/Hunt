@@ -6,6 +6,7 @@ import com.google.gson.GsonBuilder;
 import com.mojang.brigadier.CommandDispatcher;
 import com.mojang.brigadier.exceptions.CommandSyntaxException;
 import net.minecraft.commands.CommandSourceStack;
+import net.minecraft.core.HolderLookup;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
 import net.minecraft.server.MinecraftServer;
@@ -34,6 +35,7 @@ import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.Future;
 import java.util.function.Consumer;
+import java.util.stream.Stream;
 
 /**
  * Abstract class that contains some utility methods.
@@ -283,7 +285,7 @@ public abstract class Utils {
 		CompoundTag tag = new CompoundTag();
 		tag.putString("id", id);
 		tag.putInt("Count", 1);
-		return ItemStack.of(tag);
+		return ItemStack.parse(HolderLookup.Provider.create(Stream.empty()), tag).get();
 	}
 
 	public static void runCommands(ArrayList<String> commands, ServerPlayer player, Pokemon pokemon, double price) {

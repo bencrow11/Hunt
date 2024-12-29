@@ -11,11 +11,14 @@ import ca.landonjw.gooeylibs2.api.template.types.ChestTemplate;
 import com.cobblemon.mod.common.item.PokemonItem;
 import com.mojang.brigadier.context.CommandContext;
 import net.minecraft.commands.CommandSourceStack;
+import net.minecraft.core.component.DataComponents;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.network.chat.Style;
 import net.minecraft.network.chat.TextColor;
 import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.util.Unit;
+import net.minecraft.world.item.component.ItemLore;
 import org.pokesplash.hunt.Hunt;
 import org.pokesplash.hunt.command.subcommand.RefreshCommand;
 import org.pokesplash.hunt.command.subcommand.ReloadCommand;
@@ -60,15 +63,15 @@ public class HuntCommand extends BaseCommand {
 				Hunt.config.isIndividualHunts() ?
 						Hunt.manager.getPlayerHunts(sender.getUUID()).getHunts().values() :
 						Hunt.hunts.getHunts().values()) {
-			Collection<Component> lore = new ArrayList<>();
+			List<Component> lore = new ArrayList<>();
 
-			Style aqua = Style.EMPTY.withColor(TextColor.parseColor("aqua"));
-			Style blue = Style.EMPTY.withColor(TextColor.parseColor("blue"));
-			Style dark_green = Style.EMPTY.withColor(TextColor.parseColor("dark_green"));
-			Style dark_purple = Style.EMPTY.withColor(TextColor.parseColor("dark_purple"));
-			Style green = Style.EMPTY.withColor(TextColor.parseColor("green"));
-			Style red = Style.EMPTY.withColor(TextColor.parseColor("red"));
-			Style yellow = Style.EMPTY.withColor(TextColor.parseColor("yellow"));
+			Style aqua = Style.EMPTY.withColor(TextColor.parseColor("aqua").getOrThrow());
+			Style blue = Style.EMPTY.withColor(TextColor.parseColor("blue").getOrThrow());
+			Style dark_green = Style.EMPTY.withColor(TextColor.parseColor("dark_green").getOrThrow());
+			Style dark_purple = Style.EMPTY.withColor(TextColor.parseColor("dark_purple").getOrThrow());
+			Style green = Style.EMPTY.withColor(TextColor.parseColor("green").getOrThrow());
+			Style red = Style.EMPTY.withColor(TextColor.parseColor("red").getOrThrow());
+			Style yellow = Style.EMPTY.withColor(TextColor.parseColor("yellow").getOrThrow());
 
 			boolean isShiny = hunt.getPokemon().getShiny();
 
@@ -105,7 +108,7 @@ public class HuntCommand extends BaseCommand {
 				lore.add(Component.translatable("cobblemon.ui.info.nature").setStyle(dark_purple)
 						.append(Component.literal(": "))
 						.append(Component.translatable(hunt.getPokemon().getNature().getDisplayName())
-								.setStyle(Style.EMPTY.withColor(TextColor.parseColor("light_purple")))));
+								.setStyle(Style.EMPTY.withColor(TextColor.parseColor("light_purple").getOrThrow()))));
 			}
 
 			if (hunt.getPrice() > 0) {
@@ -116,8 +119,8 @@ public class HuntCommand extends BaseCommand {
 
 			GooeyButton button = GooeyButton.builder()
 					.display(PokemonItem.from(hunt.getPokemon(), 1))
-					.title(title)
-					.lore(Component.class, lore)
+					.with(DataComponents.CUSTOM_NAME, title)
+					.with(DataComponents.LORE, new ItemLore(lore))
 					.build();
 
 			hunts.add(button);
@@ -125,9 +128,10 @@ public class HuntCommand extends BaseCommand {
 
 		Button filler = GooeyButton.builder()
 				.display(Utils.parseItemId(Hunt.language.getFillerMaterial()))
-				.hideFlags(FlagType.All)
-				.lore(new ArrayList<>())
-				.title("")
+				.with(DataComponents.HIDE_TOOLTIP, Unit.INSTANCE)
+				.with(DataComponents.HIDE_ADDITIONAL_TOOLTIP, Unit.INSTANCE)
+				.with(DataComponents.LORE, new ItemLore(new ArrayList<>()))
+				.with(DataComponents.CUSTOM_NAME, Component.empty())
 				.build();
 
 		PlaceholderButton placeholder = new PlaceholderButton();
