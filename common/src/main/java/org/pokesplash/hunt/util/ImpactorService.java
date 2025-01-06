@@ -5,6 +5,8 @@ import net.impactdev.impactor.api.economy.accounts.Account;
 import net.impactdev.impactor.api.economy.currency.Currency;
 import net.impactdev.impactor.api.economy.transactions.EconomyTransaction;
 import net.impactdev.impactor.api.economy.transactions.EconomyTransferTransaction;
+import net.kyori.adventure.key.Key;
+import org.pokesplash.hunt.Hunt;
 
 import java.math.BigDecimal;
 import java.util.UUID;
@@ -17,9 +19,6 @@ public abstract class ImpactorService {
 	// The impactor service
 	private static EconomyService service = EconomyService.instance();
 
-	// The currency used for this mod.
-	private static Currency currency = service.currencies().primary();
-
 	/**
 	 * Method to get the account of a player.
 	 * @param uuid The UUID of the player.
@@ -29,6 +28,16 @@ public abstract class ImpactorService {
 	public static Account getAccount(UUID uuid) {
 		if (!service.hasAccount(uuid).join()) {
 			return service.account(uuid).join();
+		}
+
+		Currency currency = service.currencies().primary();
+
+		try {
+			if (!Hunt.config.isUseImpactorDefaultCurrency()) {
+				currency = service.currencies().currency(Key.key(Hunt.config.getImpactorCurrencyName())).get();
+			}
+		} catch (Exception e) {
+            Hunt.LOGGER.error("Could not find currency: {} from Impactor. Using default currency.", Hunt.config.getImpactorCurrencyName());
 		}
 		return service.account(currency, uuid).join();
 	}

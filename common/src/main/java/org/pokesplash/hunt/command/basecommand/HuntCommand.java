@@ -2,7 +2,6 @@ package org.pokesplash.hunt.command.basecommand;
 
 import ca.landonjw.gooeylibs2.api.UIManager;
 import ca.landonjw.gooeylibs2.api.button.Button;
-import ca.landonjw.gooeylibs2.api.button.FlagType;
 import ca.landonjw.gooeylibs2.api.button.GooeyButton;
 import ca.landonjw.gooeylibs2.api.button.PlaceholderButton;
 import ca.landonjw.gooeylibs2.api.helpers.PaginationHelper;
@@ -26,7 +25,10 @@ import org.pokesplash.hunt.hunts.SingleHunt;
 import org.pokesplash.hunt.util.BaseCommand;
 import org.pokesplash.hunt.util.Utils;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Date;
+import java.util.List;
 
 /**
  * Creates the mods base command.

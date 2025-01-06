@@ -5,7 +5,10 @@ import org.pokesplash.hunt.Hunt;
 import org.pokesplash.hunt.config.CustomPrice;
 
 import java.text.DecimalFormat;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.List;
+import java.util.UUID;
 
 public class SingleHunt {
 

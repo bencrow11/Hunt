@@ -1,8 +1,8 @@
-package org.pokesplash.hunt.config;
+package org.pokesplash.hunt.old;
 
 import com.google.gson.Gson;
 import org.pokesplash.hunt.Hunt;
-import org.pokesplash.hunt.old.OldConfig;
+import org.pokesplash.hunt.config.*;
 import org.pokesplash.hunt.util.Utils;
 
 import java.util.ArrayList;
@@ -11,9 +11,7 @@ import java.util.concurrent.CompletableFuture;
 /**
  * Config file.
  */
-public class Config extends Versioned {
-	private boolean useImpactorDefaultCurrency; // Should Hunt use Impactor's default currency.
-	private String impactorCurrencyName; // The name of the currency Impactor should use.
+public class OldConfig extends Versioned {
 	private boolean individualHunts; // if hunts should be individual for each player.
 	private boolean sendHuntEndMessage; // Should the mod send a message when a hunt ends.
 	private boolean sendHuntBeginMessage; // Should the mod send a message when a hunt begins.
@@ -27,10 +25,8 @@ public class Config extends Versioned {
 	private ArrayList<CustomPrice> customPrices; // List of custom prices.
 	private ArrayList<String> blacklist; // List if Pokemon that shouldn't be added to Hunt.
 
-	public Config() {
+	public OldConfig() {
 		super(Hunt.CONFIG_VERSION);
-		useImpactorDefaultCurrency = true;
-		impactorCurrencyName = "impactor:huntcoins";
 		individualHunts = false;
 		sendHuntEndMessage = true;
 		sendHuntBeginMessage = true;
@@ -53,41 +49,19 @@ public class Config extends Versioned {
 		CompletableFuture<Boolean> futureRead = Utils.readFileAsync("/config/hunt/", "config.json",
 				el -> {
 					Gson gson = Utils.newGson();
-					Versioned versioned = gson.fromJson(el, Versioned.class);
+					OldConfig cfg = gson.fromJson(el, OldConfig.class);
 
-					if (!versioned.getVersion().equals(Hunt.CONFIG_VERSION)) {
-						OldConfig oldConfig = gson.fromJson(el, OldConfig.class);
-						if (oldConfig.getHuntAmount() > 28) {
-							huntAmount = 28;
-							Hunt.LOGGER.error("Hunt amount can not be higher than 28");
-						} else {
-							huntAmount = oldConfig.getHuntAmount();
-						}
-						huntDuration = oldConfig.getHuntDuration();
-						individualHunts = oldConfig.isIndividualHunts();
-						sendHuntEndMessage = oldConfig.isSendHuntEndMessage();
-						sendHuntBeginMessage = oldConfig.isSendHuntBeginMessage();
-						timerCooldowns = oldConfig.isTimerCooldowns();
-						bufferDuration = oldConfig.getBufferDuration();
-						matchProperties = oldConfig.getMatchProperties();
-						customPrices = oldConfig.getCustomPrices();
-						blacklist = oldConfig.getBlacklist();
-						rarity = oldConfig.getRarity();
-						rewards = oldConfig.getRewards();
-
-						Utils.writeFileAsync("/config/hunt/", "config.json",
-								gson.toJson(this));
+					if (!cfg.getVersion().equals(Hunt.CONFIG_VERSION)) {
+						//TODO Fix versions (Future)
 					}
 
-					Config cfg = gson.fromJson(el, Config.class);
+
 					if (cfg.getHuntAmount() > 28) {
 						huntAmount = 28;
 						Hunt.LOGGER.error("Hunt amount can not be higher than 28");
 					} else {
 						huntAmount = cfg.getHuntAmount();
 					}
-					useImpactorDefaultCurrency = cfg.isUseImpactorDefaultCurrency();
-					impactorCurrencyName = cfg.getImpactorCurrencyName();
 					huntDuration = cfg.getHuntDuration();
 					individualHunts = cfg.isIndividualHunts();
 					sendHuntEndMessage = cfg.isSendHuntEndMessage();
@@ -172,13 +146,5 @@ public class Config extends Versioned {
 			if (name.equalsIgnoreCase(pokemon)) return true;
 		}
 		return false;
-	}
-
-	public boolean isUseImpactorDefaultCurrency() {
-		return useImpactorDefaultCurrency;
-	}
-
-	public String getImpactorCurrencyName() {
-		return impactorCurrencyName;
 	}
 }

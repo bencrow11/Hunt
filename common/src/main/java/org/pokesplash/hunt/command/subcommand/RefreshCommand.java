@@ -1,6 +1,5 @@
 package org.pokesplash.hunt.command.subcommand;
 
-import ca.landonjw.gooeylibs2.api.page.Page;
 import com.mojang.brigadier.arguments.StringArgumentType;
 import com.mojang.brigadier.context.CommandContext;
 import com.mojang.brigadier.tree.LiteralCommandNode;
@@ -10,11 +9,12 @@ import net.minecraft.network.chat.Component;
 import net.minecraft.server.level.ServerPlayer;
 import org.pokesplash.hunt.Hunt;
 import org.pokesplash.hunt.hunts.CurrentHunts;
-import org.pokesplash.hunt.hunts.HuntManager;
 import org.pokesplash.hunt.util.Subcommand;
 import org.pokesplash.hunt.util.Utils;
 
-import java.util.*;
+import java.util.HashSet;
+import java.util.Set;
+import java.util.UUID;
 
 public class RefreshCommand extends Subcommand {
 
