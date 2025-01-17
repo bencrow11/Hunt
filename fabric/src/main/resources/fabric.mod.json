@@ -4,8 +4,8 @@
   "version": "${version}",
 
   "name": "Hunt",
-  "description": "",
-  "authors": [],
+  "description": "A Cobblemon Mod that rewards players for capturing Pokemon.",
+  "authors": ["bencrow11"],
   "contact": {},
 
   "license": "MIT",
@@ -19,6 +19,7 @@
   },
   "depends": {
     "fabricloader": ">=0.14.22",
-    "minecraft": "=1.21.1"
+    "minecraft": "=1.21.1",
+    "cobblemon":">=1.6.0"
   }
 }

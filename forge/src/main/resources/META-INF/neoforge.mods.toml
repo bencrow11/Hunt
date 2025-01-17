@@ -21,7 +21,7 @@ modId="hunt" #mandatory
 # see the associated build.gradle script for how to populate this completely automatically during a build
 version="${version}" #mandatory
 # A display name for the mod
-displayName="Hunt" #mandatory
+displayName="Cobblemon Hunt" #mandatory
 # A URL to query for updates for this mod. See the JSON update specification <here>
 #updateJSONURL="http://myurl.me/" #optional
 # A URL for the "homepage" for this mod, displayed in the mod UI
@@ -42,7 +42,7 @@ logoFile="icon.png" #optional
 
 # The description text for the mod (multi line!) (#mandatory)
 description='''
-
+A Cobblemon Mod that rewards players for capturing Pokemon.
 '''
 # A dependency - use the . to indicate dependency for a specific modid. Dependencies are optional.
 [[dependencies.hunt]] #optional
@@ -64,3 +64,11 @@ description='''
    versionRange="[1.21.1]"
    ordering="NONE"
    side="BOTH"
+[[dependencies.hunt]]
+modId="cobblemon"
+mandatory=true
+# This version range declares a minimum of the current minecraft version up to but not including the next major version
+versionRange="[1.6.0)"
+ordering="NONE"
+side="BOTH"
+
