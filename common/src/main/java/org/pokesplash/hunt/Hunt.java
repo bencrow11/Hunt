@@ -19,7 +19,8 @@ import org.pokesplash.hunt.util.Permissions;
 public class Hunt
 {
 	public static final String MOD_ID = "hunt";
-	public static final String CONFIG_VERSION = "1.2.0";
+	public static final String CONFIG_VERSION = "1.2.1";
+	public static final String LANG_VERSION = "1.0.0";
 	public static final Logger LOGGER = LogManager.getLogger("Hunt");
 	public static Config config = new Config();
 	public static final Permissions permissions = new Permissions();

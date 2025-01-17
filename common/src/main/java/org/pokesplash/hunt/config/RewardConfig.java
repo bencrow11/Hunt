@@ -12,7 +12,9 @@ public class RewardConfig {
 	public RewardConfig(double price, String command) {
 		this.price = price;
 		this.commands = new ArrayList<>();
-		this.commands.add(command);
+		if (command != null) {
+			this.commands.add(command);
+		}
 	}
 
 	public double getPrice() {

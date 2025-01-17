@@ -1,8 +1,7 @@
-package org.pokesplash.hunt.config;
+package org.pokesplash.hunt.old;
 
 import com.google.gson.Gson;
 import org.pokesplash.hunt.Hunt;
-import org.pokesplash.hunt.old.LangOld;
 import org.pokesplash.hunt.util.Utils;
 
 import java.util.concurrent.CompletableFuture;
@@ -10,7 +9,7 @@ import java.util.concurrent.CompletableFuture;
 /**
  * Class for customization of language.
  */
-public class Lang extends Versioned {
+public class LangOld {
 	private String title; // Title of the menu
 	private String fillerMaterial; // The material used as the border in the UI.
 	private String reloadMessage; // Reload message.
@@ -20,10 +19,8 @@ public class Lang extends Versioned {
 	private String newHuntMessage; // The message sent when a new hunt begins.
 	private String reward;
 	private String timeRemaining;
-	private Lore lore;
 
-	public Lang() {
-		super(Hunt.LANG_VERSION);
+	public LangOld() {
 		title = "Hunt";
 		fillerMaterial = "minecraft:white_stained_glass_pane";
 		reloadMessage = "§aReloaded Configs!";
@@ -33,7 +30,6 @@ public class Lang extends Versioned {
 		newHuntMessage = "§5[Hunt] §bThe hunt for {pokemon} has begun!";
 		reward = "§6Reward: §e";
 		timeRemaining = "§9Time Remaining: §b";
-		lore = new Lore();
 	}
 
 	public String getTitle() {
@@ -54,6 +50,7 @@ public class Lang extends Versioned {
 	public String getEndedHuntMessage() {
 		return endedHuntMessage;
 	}
+
 	public String getNewHuntMessage() {
 		return newHuntMessage;
 	}
@@ -63,9 +60,6 @@ public class Lang extends Versioned {
 	public String getTimeRemaining() {
 		return timeRemaining;
 	}
-	public Lore getLore() {
-		return lore;
-	}
 
 	/**
 	 * Reads or creates the lang file.
@@ -74,25 +68,7 @@ public class Lang extends Versioned {
 		CompletableFuture<Boolean> futureRead = Utils.readFileAsync("/config/hunt/", "lang.json",
 				el -> {
 					Gson gson = Utils.newGson();
-					Versioned version = gson.fromJson(el, Versioned.class);
-
-					if (version == null ||
-							version.getVersion() == null ||
-							!version.getVersion().equals(Hunt.LANG_VERSION)) {
-						LangOld langOld = new LangOld();
-						title = langOld.getTitle();
-						fillerMaterial = langOld.getFillerMaterial();
-						reloadMessage = langOld.getReloadMessage();
-						captureHuntBroadcast = langOld.getCaptureHuntBroadcast();
-						payMessage = langOld.getPayMessage();
-						endedHuntMessage = langOld.getEndedHuntMessage();
-						newHuntMessage = langOld.getNewHuntMessage();
-						reward = langOld.getReward();
-						timeRemaining = langOld.getTimeRemaining();
-						write();
-					}
-
-					Lang lang = gson.fromJson(el, Lang.class);
+					LangOld lang = gson.fromJson(el, LangOld.class);
 					title = lang.getTitle();
 					fillerMaterial = lang.getFillerMaterial();
 					reloadMessage = lang.getReloadMessage();
@@ -102,26 +78,19 @@ public class Lang extends Versioned {
 					newHuntMessage = lang.getNewHuntMessage();
 					reward = lang.getReward();
 					timeRemaining = lang.getTimeRemaining();
-					lore = lang.getLore();
 				});
 
 		if (!futureRead.join()) {
 			Hunt.LOGGER.info("No lang.json file found for Hunt. Attempting to generate one.");
+			Gson gson = Utils.newGson();
+			String data = gson.toJson(this);
+			CompletableFuture<Boolean> futureWrite = Utils.writeFileAsync("/config/hunt/", "lang.json",
+					data);
 
-			boolean isSuccess = write();
-
-			if (!isSuccess) {
+			if (!futureWrite.join()) {
 				Hunt.LOGGER.fatal("Could not write lang.json file for Hunt.");
 			}
 			Hunt.LOGGER.info("Hunt lang file read successfully.");
 		}
-	}
-
-	private boolean write() {
-		Gson gson = Utils.newGson();
-		String data = gson.toJson(this);
-		CompletableFuture<Boolean> futureWrite = Utils.writeFileAsync("/config/hunt/", "lang.json",
-				data);
-		return futureWrite.join();
 	}
 }

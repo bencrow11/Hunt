@@ -67,13 +67,13 @@ public class HuntCommand extends BaseCommand {
 						Hunt.hunts.getHunts().values()) {
 			List<Component> lore = new ArrayList<>();
 
-			Style aqua = Style.EMPTY.withColor(TextColor.parseColor("aqua").getOrThrow());
-			Style blue = Style.EMPTY.withColor(TextColor.parseColor("blue").getOrThrow());
-			Style dark_green = Style.EMPTY.withColor(TextColor.parseColor("dark_green").getOrThrow());
-			Style dark_purple = Style.EMPTY.withColor(TextColor.parseColor("dark_purple").getOrThrow());
-			Style green = Style.EMPTY.withColor(TextColor.parseColor("green").getOrThrow());
-			Style red = Style.EMPTY.withColor(TextColor.parseColor("red").getOrThrow());
-			Style yellow = Style.EMPTY.withColor(TextColor.parseColor("yellow").getOrThrow());
+			Style aqua = createStyle("aqua");
+			Style blue = createStyle("blue");
+			Style dark_green = createStyle("dark_green");
+			Style dark_purple = createStyle("dark_purple");
+			Style green = createStyle("green");
+			Style red = createStyle("red");
+			Style yellow = createStyle("yellow");
 
 			boolean isShiny = hunt.getPokemon().getShiny();
 
@@ -119,6 +119,8 @@ public class HuntCommand extends BaseCommand {
 
 			lore.add(Component.literal(Hunt.language.getTimeRemaining() + Utils.parseLongDate(hunt.getEndtime() - new Date().getTime())));
 
+			Hunt.language.getLore().get(hunt.getBucket()).forEach(l -> lore.add(Component.literal(l)));
+
 			GooeyButton button = GooeyButton.builder()
 					.display(PokemonItem.from(hunt.getPokemon(), 1))
 					.with(DataComponents.CUSTOM_NAME, title)
@@ -151,5 +153,9 @@ public class HuntCommand extends BaseCommand {
 		UIManager.openUIForcefully(sender, page);
 
 		return 1;
+	}
+
+	private Style createStyle(String colour) {
+		return Style.EMPTY.withColor(TextColor.parseColor(colour).getOrThrow()).withItalic(false);
 	}
 }

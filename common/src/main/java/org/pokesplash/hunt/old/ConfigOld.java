@@ -11,7 +11,9 @@ import java.util.concurrent.CompletableFuture;
 /**
  * Config file.
  */
-public class OldConfig extends Versioned {
+public class ConfigOld extends Versioned {
+	private boolean useImpactorDefaultCurrency; // Should Hunt use Impactor's default currency.
+	private String impactorCurrencyName; // The name of the currency Impactor should use.
 	private boolean individualHunts; // if hunts should be individual for each player.
 	private boolean sendHuntEndMessage; // Should the mod send a message when a hunt ends.
 	private boolean sendHuntBeginMessage; // Should the mod send a message when a hunt begins.
@@ -19,14 +21,16 @@ public class OldConfig extends Versioned {
 	private int bufferDuration; // The duration the buffer should wait to collect broadcasts.
 	private int huntDuration; // How long each hunt should last, in minutes.
 	private int huntAmount; // How many hunts should there be at once.
-	private RarityConfig rarity; // The rarity borders.
+	private RarityConfigOld rarity; // The rarity borders.
 	private RewardsConfig rewards; // The rewards for the hunts.
 	private Properties matchProperties; // What properties should be checked to complete the hunt.
-	private ArrayList<CustomPrice> customPrices; // List of custom prices.
+	private ArrayList<CustomPriceOld> customPrices; // List of custom prices.
 	private ArrayList<String> blacklist; // List if Pokemon that shouldn't be added to Hunt.
 
-	public OldConfig() {
+	public ConfigOld() {
 		super(Hunt.CONFIG_VERSION);
+		useImpactorDefaultCurrency = true;
+		impactorCurrencyName = "impactor:huntcoins";
 		individualHunts = false;
 		sendHuntEndMessage = true;
 		sendHuntBeginMessage = true;
@@ -34,11 +38,11 @@ public class OldConfig extends Versioned {
 		bufferDuration = 5;
 		huntDuration = 60;
 		huntAmount = 7;
-		rarity = new RarityConfig();
+		rarity = new RarityConfigOld();
 		rewards = new RewardsConfig();
 		matchProperties = new Properties();
 		customPrices = new ArrayList<>();
-		customPrices.add(new CustomPrice());
+		customPrices.add(new CustomPriceOld());
 		blacklist = new ArrayList<>();
 	}
 
@@ -49,19 +53,17 @@ public class OldConfig extends Versioned {
 		CompletableFuture<Boolean> futureRead = Utils.readFileAsync("/config/hunt/", "config.json",
 				el -> {
 					Gson gson = Utils.newGson();
-					OldConfig cfg = gson.fromJson(el, OldConfig.class);
+					Versioned versioned = gson.fromJson(el, Versioned.class);
 
-					if (!cfg.getVersion().equals(Hunt.CONFIG_VERSION)) {
-						//TODO Fix versions (Future)
-					}
-
-
+					ConfigOld cfg = gson.fromJson(el, ConfigOld.class);
 					if (cfg.getHuntAmount() > 28) {
 						huntAmount = 28;
 						Hunt.LOGGER.error("Hunt amount can not be higher than 28");
 					} else {
 						huntAmount = cfg.getHuntAmount();
 					}
+					useImpactorDefaultCurrency = cfg.isUseImpactorDefaultCurrency();
+					impactorCurrencyName = cfg.getImpactorCurrencyName();
 					huntDuration = cfg.getHuntDuration();
 					individualHunts = cfg.isIndividualHunts();
 					sendHuntEndMessage = cfg.isSendHuntEndMessage();
@@ -117,7 +119,7 @@ public class OldConfig extends Versioned {
 		return matchProperties;
 	}
 
-	public ArrayList<CustomPrice> getCustomPrices() {
+	public ArrayList<CustomPriceOld> getCustomPrices() {
 		return customPrices;
 	}
 
@@ -133,7 +135,7 @@ public class OldConfig extends Versioned {
 		return blacklist;
 	}
 
-	public RarityConfig getRarity() {
+	public RarityConfigOld getRarity() {
 		return rarity;
 	}
 
@@ -146,5 +148,13 @@ public class OldConfig extends Versioned {
 			if (name.equalsIgnoreCase(pokemon)) return true;
 		}
 		return false;
+	}
+
+	public boolean isUseImpactorDefaultCurrency() {
+		return useImpactorDefaultCurrency;
+	}
+
+	public String getImpactorCurrencyName() {
+		return impactorCurrencyName;
 	}
 }

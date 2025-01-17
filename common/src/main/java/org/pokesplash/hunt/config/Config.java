@@ -2,7 +2,7 @@ package org.pokesplash.hunt.config;
 
 import com.google.gson.Gson;
 import org.pokesplash.hunt.Hunt;
-import org.pokesplash.hunt.old.OldConfig;
+import org.pokesplash.hunt.old.ConfigOld;
 import org.pokesplash.hunt.util.Utils;
 
 import java.util.ArrayList;
@@ -56,13 +56,15 @@ public class Config extends Versioned {
 					Versioned versioned = gson.fromJson(el, Versioned.class);
 
 					if (!versioned.getVersion().equals(Hunt.CONFIG_VERSION)) {
-						OldConfig oldConfig = gson.fromJson(el, OldConfig.class);
+						ConfigOld oldConfig = gson.fromJson(el, ConfigOld.class);
 						if (oldConfig.getHuntAmount() > 28) {
 							huntAmount = 28;
 							Hunt.LOGGER.error("Hunt amount can not be higher than 28");
 						} else {
 							huntAmount = oldConfig.getHuntAmount();
 						}
+						useImpactorDefaultCurrency = oldConfig.isUseImpactorDefaultCurrency();
+						impactorCurrencyName = oldConfig.getImpactorCurrencyName();
 						huntDuration = oldConfig.getHuntDuration();
 						individualHunts = oldConfig.isIndividualHunts();
 						sendHuntEndMessage = oldConfig.isSendHuntEndMessage();
@@ -70,13 +72,13 @@ public class Config extends Versioned {
 						timerCooldowns = oldConfig.isTimerCooldowns();
 						bufferDuration = oldConfig.getBufferDuration();
 						matchProperties = oldConfig.getMatchProperties();
-						customPrices = oldConfig.getCustomPrices();
+						customPrices.clear();
+						oldConfig.getCustomPrices().forEach(price -> {
+							customPrices.add(new CustomPrice(price.getSpecies(), price.getForm(), price.getPrice()));
+						});
 						blacklist = oldConfig.getBlacklist();
-						rarity = oldConfig.getRarity();
 						rewards = oldConfig.getRewards();
-
-						Utils.writeFileAsync("/config/hunt/", "config.json",
-								gson.toJson(this));
+						write();
 					}
 
 					Config cfg = gson.fromJson(el, Config.class);
@@ -104,19 +106,25 @@ public class Config extends Versioned {
 		// If the config couldn't be read, write a new one.
 		if (!futureRead.join()) {
 			Hunt.LOGGER.info("No config.json file found for Hunt. Attempting to generate one.");
-			Gson gson = Utils.newGson();
-			String data = gson.toJson(this);
-			CompletableFuture<Boolean> futureWrite = Utils.writeFileAsync("/config/hunt/", "config.json",
-					data);
+			boolean futureWrite = write();
 
 			// If the write failed, log fatal.
-			if (!futureWrite.join()) {
+			if (!futureWrite) {
 				Hunt.LOGGER.fatal("Could not write config for Hunt.");
 			}
 			return;
 		}
 		Hunt.LOGGER.info("Hunt config file read successfully.");
 	}
+
+	private boolean write() {
+		Gson gson = Utils.newGson();
+		String data = gson.toJson(this);
+		CompletableFuture<Boolean> futureWrite = Utils.writeFileAsync("/config/hunt/", "config.json",
+				data);
+		return futureWrite.join();
+	}
+
 
 	public int getBufferDuration() {
 		return bufferDuration;

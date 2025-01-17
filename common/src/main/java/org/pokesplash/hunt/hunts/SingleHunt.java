@@ -1,14 +1,17 @@
 package org.pokesplash.hunt.hunts;
 
+import com.cobblemon.mod.common.Cobblemon;
+import com.cobblemon.mod.common.api.pokemon.PokemonProperties;
+import com.cobblemon.mod.common.api.spawning.SpawnBucket;
 import com.cobblemon.mod.common.pokemon.Pokemon;
 import org.pokesplash.hunt.Hunt;
 import org.pokesplash.hunt.config.CustomPrice;
+import org.pokesplash.hunt.config.RarityConfig;
+import org.pokesplash.hunt.config.RewardConfig;
+import org.pokesplash.hunt.util.Utils;
 
 import java.text.DecimalFormat;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
-import java.util.UUID;
+import java.util.*;
 
 public class SingleHunt {
 
@@ -18,6 +21,7 @@ public class SingleHunt {
 	private ArrayList<String> commands; // Commands for completing the hunt.
 	private Pokemon pokemon; // Pokemon being hunted.
 	private final long endtime; // The end date for the hunt.
+	private Bucket bucket; // The spawn bucket of the Pokemon.
 
 	public SingleHunt(UUID owner) {
 		// Creates unique ID and generates random pokemon.
@@ -26,18 +30,20 @@ public class SingleHunt {
 
 		pokemon = new Pokemon();
 
-		float rarity = Hunt.spawnRates.getRarity(pokemon);
-
+		Bucket rarityRequired = Hunt.config.getRarity().getRandomRarity();
+		bucket = Hunt.spawnRates.getBucket(pokemon);
 		boolean isLegendary = pokemon.isLegendary();
 
 		// Will keep regenerating a Pokemon until one found in the rarity table that isn't a legendary is found.
-		while (rarity == -1 || isLegendary) {
+		while (bucket == null || isLegendary || !bucket.equals(rarityRequired)) {
 			pokemon = new Pokemon();
-			rarity = Hunt.spawnRates.getRarity(pokemon);
+			bucket = Hunt.spawnRates.getBucket(pokemon);
 			isLegendary = pokemon.isLegendary();
 		}
 
-		boolean hasCustom = false;
+		RewardConfig reward = Hunt.config.getRewards().get(bucket);
+		price = reward.getPrice();
+		commands = reward.getCommands();
 
 		// Checks for a custom price.
 		List<CustomPrice> customPrices = Hunt.config.getCustomPrices();
@@ -47,32 +53,13 @@ public class SingleHunt {
 				// If no form is given or the form matches, use price.
 				if (item.getForm().trim().equalsIgnoreCase("") ||
 						item.getForm().trim().equalsIgnoreCase(pokemon.getForm().getName().trim())) {
-					hasCustom = true;
-					price = item.getPrice();
+					price = item.getReward().getPrice();
+					commands = item.getReward().getCommands();
 					break;
 				}
 			}
 		}
 
-		commands = new ArrayList<>();
-
-		// If a custom price is found, don't run this.
-		if (!hasCustom) {
-			// Sets the price based on the rarity.
-			if (rarity >= Hunt.config.getRarity().getCommonPokemonRarity()) {
-				price = Hunt.config.getRewards().getCommon().getPrice();
-				commands = Hunt.config.getRewards().getCommon().getCommands();
-			} else if (rarity >= Hunt.config.getRarity().getUncommonPokemonRarity()) {
-				price = Hunt.config.getRewards().getUncommon().getPrice();
-				commands = Hunt.config.getRewards().getUncommon().getCommands();
-			} else if (rarity >= Hunt.config.getRarity().getRarePokemonRarity()) {
-				price = Hunt.config.getRewards().getRare().getPrice();
-				commands = Hunt.config.getRewards().getRare().getCommands();
-			} else {
-				price = Hunt.config.getRewards().getUltraRare().getPrice();
-				commands = Hunt.config.getRewards().getUltraRare().getCommands();
-			}
-		}
 		pokemon.rollAbility();
 		pokemon.checkGender();
 
@@ -129,6 +116,10 @@ public class SingleHunt {
 
 	public ArrayList<String> getCommands() {
 		return commands;
+	}
+
+	public Bucket getBucket() {
+		return bucket;
 	}
 
 	/**
