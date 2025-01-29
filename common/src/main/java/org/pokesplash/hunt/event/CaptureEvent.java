@@ -8,6 +8,8 @@ import net.minecraft.network.chat.Component;
 import net.minecraft.server.level.ServerPlayer;
 import org.pokesplash.hunt.Hunt;
 import org.pokesplash.hunt.api.event.HuntEvents;
+import org.pokesplash.hunt.api.event.economy.HuntEconomy;
+import org.pokesplash.hunt.api.event.economy.HuntEconomyProvider;
 import org.pokesplash.hunt.api.event.events.CompletedEvent;
 import org.pokesplash.hunt.broadcast.BroadcastType;
 import org.pokesplash.hunt.hunts.ReplacedHunt;
@@ -67,7 +69,7 @@ public abstract class CaptureEvent {
 				if (price > 0) {
 					try {
 						// Performs the transaction.
-						boolean success = ImpactorService.add(ImpactorService.getAccount(player.getUUID()), price);
+						boolean success = HuntEconomyProvider.getHighestEconomy().add(player.getUUID(), price);
 
 						// If the transaction was successful, replace the caught pokemon in hunt and send some messages.
 						if (success) {
@@ -76,7 +78,7 @@ public abstract class CaptureEvent {
 									Hunt.language.getPayMessage(), player, pokemon, price
 							)));
 						}
-					} catch (NullPointerException ex) {
+					} catch (Exception ex) {
 						// If any errors occur, send log to console.
 						Hunt.LOGGER.error("Could not process hunt " + matchedUUID + " for " + player.getName().getString());
 						// Just in case playerlist is empty for some random reason.

@@ -4,9 +4,9 @@ import net.impactdev.impactor.api.economy.EconomyService;
 import net.impactdev.impactor.api.economy.accounts.Account;
 import net.impactdev.impactor.api.economy.currency.Currency;
 import net.impactdev.impactor.api.economy.transactions.EconomyTransaction;
-import net.impactdev.impactor.api.economy.transactions.EconomyTransferTransaction;
 import net.kyori.adventure.key.Key;
 import org.pokesplash.hunt.Hunt;
+import org.pokesplash.hunt.api.event.economy.HuntEconomy;
 
 import java.math.BigDecimal;
 import java.util.UUID;
@@ -14,10 +14,10 @@ import java.util.UUID;
 /**
  * Class to interact with the Impactor API
  */
-public abstract class ImpactorService {
+public class ImpactorService implements HuntEconomy {
 
 	// The impactor service
-	private static EconomyService service = EconomyService.instance();
+	private EconomyService service = EconomyService.instance();
 
 	/**
 	 * Method to get the account of a player.
@@ -25,7 +25,7 @@ public abstract class ImpactorService {
 	 * @return The account of the player.
 	 */
 
-	public static Account getAccount(UUID uuid) {
+	private Account getAccount(UUID uuid) {
 		if (!service.hasAccount(uuid).join()) {
 			return service.account(uuid).join();
 		}
@@ -48,33 +48,12 @@ public abstract class ImpactorService {
 	 * @param amount The amount to add.
 	 * @return true if the transaction was successful.
 	 */
-	public static boolean add(Account account, double amount) {
-		EconomyTransaction transaction = account.deposit(new BigDecimal(amount));
+	@Override
+	public boolean add(UUID account, double amount) {
 
-		return transaction.successful();
-	}
+		Account acc = getAccount(account);
 
-	/**
-	 * Method to remove a balance from an account.
-	 * @param account The account to remove the balance from.
-	 * @param amount The amount to remove from the account.
-	 * @return true if the transaction was successful.
-	 */
-	public static boolean remove(Account account, double amount) {
-		EconomyTransaction transaction = account.withdraw(new BigDecimal(amount));
-
-		return transaction.successful();
-	}
-
-	/**
-	 * Method to transfer a balance from one account to another.
-	 * @param sender The account that is sending the balance.
-	 * @param receiver The account that is receiving the balance.
-	 * @param amount The amount to be transferred.
-	 * @return true if the transaction was successful.
-	 */
-	public static boolean transfer(Account sender, Account receiver, double amount) {
-		EconomyTransferTransaction transaction = sender.transfer(receiver, new BigDecimal(amount));
+		EconomyTransaction transaction = acc.deposit(new BigDecimal(amount));
 
 		return transaction.successful();
 	}

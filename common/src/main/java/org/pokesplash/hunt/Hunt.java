@@ -3,6 +3,7 @@ package org.pokesplash.hunt;
 import net.minecraft.server.MinecraftServer;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import org.pokesplash.hunt.api.event.economy.HuntEconomyProvider;
 import org.pokesplash.hunt.broadcast.Broadcaster;
 import org.pokesplash.hunt.command.basecommand.HuntCommand;
 import org.pokesplash.hunt.config.Config;
@@ -19,7 +20,7 @@ import org.pokesplash.hunt.util.Permissions;
 public class Hunt
 {
 	public static final String MOD_ID = "hunt";
-	public static final String CONFIG_VERSION = "1.2.1";
+	public static final String CONFIG_VERSION = "1.2.2";
 	public static final String LANG_VERSION = "1.0.0";
 	public static final Logger LOGGER = LogManager.getLogger("Hunt");
 	public static Config config = new Config();

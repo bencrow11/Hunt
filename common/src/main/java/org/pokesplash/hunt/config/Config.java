@@ -2,6 +2,7 @@ package org.pokesplash.hunt.config;
 
 import com.google.gson.Gson;
 import org.pokesplash.hunt.Hunt;
+import org.pokesplash.hunt.enumeration.Economy;
 import org.pokesplash.hunt.old.ConfigOld;
 import org.pokesplash.hunt.util.Utils;
 
@@ -12,6 +13,7 @@ import java.util.concurrent.CompletableFuture;
  * Config file.
  */
 public class Config extends Versioned {
+	private Economy economy; // The economy mod to use. Only options are Impactor and Pebbles.
 	private boolean useImpactorDefaultCurrency; // Should Hunt use Impactor's default currency.
 	private String impactorCurrencyName; // The name of the currency Impactor should use.
 	private boolean individualHunts; // if hunts should be individual for each player.
@@ -29,6 +31,7 @@ public class Config extends Versioned {
 
 	public Config() {
 		super(Hunt.CONFIG_VERSION);
+		economy = Economy.IMPACTOR;
 		useImpactorDefaultCurrency = true;
 		impactorCurrencyName = "impactor:huntcoins";
 		individualHunts = false;
@@ -55,32 +58,6 @@ public class Config extends Versioned {
 					Gson gson = Utils.newGson();
 					Versioned versioned = gson.fromJson(el, Versioned.class);
 
-					if (!versioned.getVersion().equals(Hunt.CONFIG_VERSION)) {
-						ConfigOld oldConfig = gson.fromJson(el, ConfigOld.class);
-						if (oldConfig.getHuntAmount() > 28) {
-							huntAmount = 28;
-							Hunt.LOGGER.error("Hunt amount can not be higher than 28");
-						} else {
-							huntAmount = oldConfig.getHuntAmount();
-						}
-						useImpactorDefaultCurrency = oldConfig.isUseImpactorDefaultCurrency();
-						impactorCurrencyName = oldConfig.getImpactorCurrencyName();
-						huntDuration = oldConfig.getHuntDuration();
-						individualHunts = oldConfig.isIndividualHunts();
-						sendHuntEndMessage = oldConfig.isSendHuntEndMessage();
-						sendHuntBeginMessage = oldConfig.isSendHuntBeginMessage();
-						timerCooldowns = oldConfig.isTimerCooldowns();
-						bufferDuration = oldConfig.getBufferDuration();
-						matchProperties = oldConfig.getMatchProperties();
-						customPrices.clear();
-						oldConfig.getCustomPrices().forEach(price -> {
-							customPrices.add(new CustomPrice(price.getSpecies(), price.getForm(), price.getPrice()));
-						});
-						blacklist = oldConfig.getBlacklist();
-						rewards = oldConfig.getRewards();
-						write();
-					}
-
 					Config cfg = gson.fromJson(el, Config.class);
 					if (cfg.getHuntAmount() > 28) {
 						huntAmount = 28;
@@ -101,6 +78,14 @@ public class Config extends Versioned {
 					blacklist = cfg.getBlacklist();
 					rarity = cfg.getRarity();
 					rewards = cfg.getRewards();
+					economy = cfg.getEconomy();
+
+					if (!versioned.getVersion().equals(Hunt.CONFIG_VERSION)) {
+						economy = Economy.IMPACTOR;
+						write();
+					}
+
+
 				});
 
 		// If the config couldn't be read, write a new one.
@@ -188,5 +173,9 @@ public class Config extends Versioned {
 
 	public String getImpactorCurrencyName() {
 		return impactorCurrencyName;
+	}
+
+	public Economy getEconomy() {
+		return economy;
 	}
 }

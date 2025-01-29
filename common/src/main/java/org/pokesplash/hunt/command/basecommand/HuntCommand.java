@@ -56,101 +56,108 @@ public class HuntCommand extends BaseCommand {
 
 		ServerPlayer sender = context.getSource().getPlayer();
 
-		/**
-		 *  Creates the UI
-		 */
 
-		List<Button> hunts = new ArrayList<>();
-		for (SingleHunt hunt :
-				Hunt.config.isIndividualHunts() ?
-						Hunt.manager.getPlayerHunts(sender.getUUID()).getHunts().values() :
-						Hunt.hunts.getHunts().values()) {
-			List<Component> lore = new ArrayList<>();
+		try {
+			/**
+			 *  Creates the UI
+			 */
 
-			Style aqua = createStyle("aqua");
-			Style blue = createStyle("blue");
-			Style dark_green = createStyle("dark_green");
-			Style dark_purple = createStyle("dark_purple");
-			Style green = createStyle("green");
-			Style red = createStyle("red");
-			Style yellow = createStyle("yellow");
+			List<Button> hunts = new ArrayList<>();
+			for (SingleHunt hunt :
+					Hunt.config.isIndividualHunts() ?
+							Hunt.manager.getPlayerHunts(sender.getUUID()).getHunts().values() :
+							Hunt.hunts.getHunts().values()) {
+				List<Component> lore = new ArrayList<>();
 
-			boolean isShiny = hunt.getPokemon().getShiny();
+				Style aqua = createStyle("aqua");
+				Style blue = createStyle("blue");
+				Style dark_green = createStyle("dark_green");
+				Style dark_purple = createStyle("dark_purple");
+				Style green = createStyle("green");
+				Style red = createStyle("red");
+				Style yellow = createStyle("yellow");
 
-			MutableComponent title = hunt.getPokemon().getSpecies().getTranslatedName().setStyle(isShiny ? yellow : aqua);
+				boolean isShiny = hunt.getPokemon().getShiny();
 
-			if (isShiny) {
-				title.append(Component.literal("★").setStyle(red));
-			}
+				MutableComponent title = hunt.getPokemon().getSpecies().getTranslatedName().setStyle(isShiny ? yellow : aqua);
 
-			if (Hunt.config.getMatchProperties().isGender()) {
-				switch (hunt.getPokemon().getGender().toString()) {
-					case "MALE":
-						title.append(Component.literal(" ♂").setStyle(blue));
-						break;
-					case "FEMALE":
-						title.append(Component.literal(" ♀").setStyle(red));
-						break;
-					default:
-						break;
+				if (isShiny) {
+					title.append(Component.literal("★").setStyle(red));
 				}
+
+				if (Hunt.config.getMatchProperties().isGender()) {
+					switch (hunt.getPokemon().getGender().toString()) {
+						case "MALE":
+							title.append(Component.literal(" ♂").setStyle(blue));
+							break;
+						case "FEMALE":
+							title.append(Component.literal(" ♀").setStyle(red));
+							break;
+						default:
+							break;
+					}
+				}
+
+				if (!hunt.getPokemon().getForm().getName().equalsIgnoreCase("normal")) {
+					title.append(Component.literal(" - " + hunt.getPokemon().getForm().getName()).setStyle(aqua));
+				}
+
+				if (Hunt.config.getMatchProperties().isAbility()) {
+					lore.add(Component.translatable("cobblemon.ui.info.ability").setStyle(dark_green)
+							.append(Component.literal(": "))
+							.append(Component.translatable(hunt.getPokemon().getAbility().getDisplayName()).setStyle(green)));
+				}
+
+				if (Hunt.config.getMatchProperties().isNature()) {
+					lore.add(Component.translatable("cobblemon.ui.info.nature").setStyle(dark_purple)
+							.append(Component.literal(": "))
+							.append(Component.translatable(hunt.getPokemon().getNature().getDisplayName())
+									.setStyle(Style.EMPTY.withColor(TextColor.parseColor("light_purple").getOrThrow()))));
+				}
+
+				if (hunt.getPrice() > 0) {
+					lore.add(Component.literal(Hunt.language.getReward() + hunt.getPriceAsString()));
+				}
+
+				lore.add(Component.literal(Hunt.language.getTimeRemaining() + Utils.parseLongDate(hunt.getEndtime() - new Date().getTime())));
+
+				Hunt.language.getLore().get(hunt.getBucket()).forEach(l -> lore.add(Component.literal(l)));
+
+				GooeyButton button = GooeyButton.builder()
+						.display(PokemonItem.from(hunt.getPokemon(), 1))
+						.with(DataComponents.CUSTOM_NAME, title)
+						.with(DataComponents.LORE, new ItemLore(lore))
+						.build();
+
+				hunts.add(button);
 			}
 
-			if (!hunt.getPokemon().getForm().getName().equalsIgnoreCase("normal")) {
-				title.append(Component.literal(" - " + hunt.getPokemon().getForm().getName()).setStyle(aqua));
-			}
-
-			if (Hunt.config.getMatchProperties().isAbility()) {
-				lore.add(Component.translatable("cobblemon.ui.info.ability").setStyle(dark_green)
-						.append(Component.literal(": "))
-						.append(Component.translatable(hunt.getPokemon().getAbility().getDisplayName()).setStyle(green)));
-			}
-
-			if (Hunt.config.getMatchProperties().isNature()) {
-				lore.add(Component.translatable("cobblemon.ui.info.nature").setStyle(dark_purple)
-						.append(Component.literal(": "))
-						.append(Component.translatable(hunt.getPokemon().getNature().getDisplayName())
-								.setStyle(Style.EMPTY.withColor(TextColor.parseColor("light_purple").getOrThrow()))));
-			}
-
-			if (hunt.getPrice() > 0) {
-				lore.add(Component.literal(Hunt.language.getReward() + hunt.getPriceAsString()));
-			}
-
-			lore.add(Component.literal(Hunt.language.getTimeRemaining() + Utils.parseLongDate(hunt.getEndtime() - new Date().getTime())));
-
-			Hunt.language.getLore().get(hunt.getBucket()).forEach(l -> lore.add(Component.literal(l)));
-
-			GooeyButton button = GooeyButton.builder()
-					.display(PokemonItem.from(hunt.getPokemon(), 1))
-					.with(DataComponents.CUSTOM_NAME, title)
-					.with(DataComponents.LORE, new ItemLore(lore))
+			Button filler = GooeyButton.builder()
+					.display(Utils.parseItemId(Hunt.language.getFillerMaterial()))
+					.with(DataComponents.HIDE_TOOLTIP, Unit.INSTANCE)
+					.with(DataComponents.HIDE_ADDITIONAL_TOOLTIP, Unit.INSTANCE)
+					.with(DataComponents.LORE, new ItemLore(new ArrayList<>()))
+					.with(DataComponents.CUSTOM_NAME, Component.empty())
 					.build();
 
-			hunts.add(button);
+			PlaceholderButton placeholder = new PlaceholderButton();
+
+			int rows = (int) Math.ceil((double) Hunt.config.getHuntAmount() / 7) + 2;
+
+			ChestTemplate template = ChestTemplate.builder(rows)
+					.rectangle(1, 1, rows - 2, 7, placeholder)
+					.fill(filler)
+					.build();
+
+			LinkedPage page = PaginationHelper.createPagesFromPlaceholders(template, hunts, null);
+			page.setTitle(Hunt.language.getTitle());
+
+			UIManager.openUIForcefully(sender, page);
+		} catch (Exception e) {
+			sender.sendSystemMessage(Component.literal("§cSomething went wrong. Error: " + e.getMessage() +
+					".\n Check the console for more details."));
+			e.printStackTrace();
 		}
-
-		Button filler = GooeyButton.builder()
-				.display(Utils.parseItemId(Hunt.language.getFillerMaterial()))
-				.with(DataComponents.HIDE_TOOLTIP, Unit.INSTANCE)
-				.with(DataComponents.HIDE_ADDITIONAL_TOOLTIP, Unit.INSTANCE)
-				.with(DataComponents.LORE, new ItemLore(new ArrayList<>()))
-				.with(DataComponents.CUSTOM_NAME, Component.empty())
-				.build();
-
-		PlaceholderButton placeholder = new PlaceholderButton();
-
-		int rows = (int) Math.ceil((double) Hunt.config.getHuntAmount() / 7) + 2;
-
-		ChestTemplate template = ChestTemplate.builder(rows)
-				.rectangle(1, 1, rows - 2, 7, placeholder)
-				.fill(filler)
-				.build();
-
-		LinkedPage page = PaginationHelper.createPagesFromPlaceholders(template, hunts, null);
-		page.setTitle(Hunt.language.getTitle());
-
-		UIManager.openUIForcefully(sender, page);
 
 		return 1;
 	}
