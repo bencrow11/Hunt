@@ -58,6 +58,9 @@ allprojects {
             url "https://maven.neoforged.net/releases/"
         }
 
+        flatDir {
+            dir 'libs'
+        }
     }
 
     tasks.withType(JavaCompile) {

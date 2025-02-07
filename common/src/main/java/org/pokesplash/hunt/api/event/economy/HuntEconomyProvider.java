@@ -1,9 +1,10 @@
 package org.pokesplash.hunt.api.event.economy;
 
 import org.pokesplash.hunt.Hunt;
+import org.pokesplash.hunt.economy.PebblesService;
 import org.pokesplash.hunt.enumeration.Economy;
 import org.pokesplash.hunt.enumeration.Priority;
-import org.pokesplash.hunt.util.ImpactorService;
+import org.pokesplash.hunt.economy.ImpactorService;
 
 import java.util.HashMap;
 
@@ -50,7 +51,7 @@ public abstract class HuntEconomyProvider {
         }
 
         if (Hunt.config.getEconomy() == Economy.PEBBLES) {
-            return null;
+            return new PebblesService();
         }
 
         throw new Exception("No economy could be found.");

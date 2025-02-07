@@ -1,4 +1,4 @@
-package org.pokesplash.hunt.util;
+package org.pokesplash.hunt.economy;
 
 import net.impactdev.impactor.api.economy.EconomyService;
 import net.impactdev.impactor.api.economy.accounts.Account;
