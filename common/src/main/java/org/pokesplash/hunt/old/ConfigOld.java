@@ -3,7 +3,6 @@ package org.pokesplash.hunt.old;
 import com.google.gson.Gson;
 import org.pokesplash.hunt.Hunt;
 import org.pokesplash.hunt.config.*;
-import org.pokesplash.hunt.enumeration.Economy;
 import org.pokesplash.hunt.util.Utils;
 
 import java.util.ArrayList;

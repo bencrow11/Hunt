@@ -6,7 +6,7 @@ import net.impactdev.impactor.api.economy.currency.Currency;
 import net.impactdev.impactor.api.economy.transactions.EconomyTransaction;
 import net.kyori.adventure.key.Key;
 import org.pokesplash.hunt.Hunt;
-import org.pokesplash.hunt.api.event.economy.HuntEconomy;
+import org.pokesplash.hunt.api.economy.HuntEconomy;
 
 import java.math.BigDecimal;
 import java.util.UUID;
@@ -34,10 +34,10 @@ public class ImpactorService implements HuntEconomy {
 
 		try {
 			if (!Hunt.config.isUseImpactorDefaultCurrency()) {
-				currency = service.currencies().currency(Key.key(Hunt.config.getImpactorCurrencyName())).get();
+				currency = service.currencies().currency(Key.key(Hunt.config.getCurrencyName())).get();
 			}
 		} catch (Exception e) {
-            Hunt.LOGGER.error("Could not find currency: {} from Impactor. Using default currency.", Hunt.config.getImpactorCurrencyName());
+            Hunt.LOGGER.error("Could not find currency: {} from Impactor. Using default currency.", Hunt.config.getCurrencyName());
 		}
 		return service.account(currency, uuid).join();
 	}

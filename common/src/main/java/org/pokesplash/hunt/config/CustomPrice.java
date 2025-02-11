@@ -1,7 +1,5 @@
 package org.pokesplash.hunt.config;
 
-import java.util.ArrayList;
-
 /**
  * Custom prices
  */

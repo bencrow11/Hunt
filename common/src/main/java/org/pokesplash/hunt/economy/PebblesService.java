@@ -1,6 +1,6 @@
 package org.pokesplash.hunt.economy;
 
-import org.pokesplash.hunt.api.event.economy.HuntEconomy;
+import org.pokesplash.hunt.api.economy.HuntEconomy;
 import tech.sethi.pebbleseconomy.Economy;
 import tech.sethi.pebbleseconomy.PebblesEconomyInitializer;
 

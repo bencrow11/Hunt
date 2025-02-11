@@ -1,17 +1,15 @@
 package org.pokesplash.hunt.hunts;
 
-import com.cobblemon.mod.common.Cobblemon;
-import com.cobblemon.mod.common.api.pokemon.PokemonProperties;
-import com.cobblemon.mod.common.api.spawning.SpawnBucket;
 import com.cobblemon.mod.common.pokemon.Pokemon;
 import org.pokesplash.hunt.Hunt;
 import org.pokesplash.hunt.config.CustomPrice;
-import org.pokesplash.hunt.config.RarityConfig;
 import org.pokesplash.hunt.config.RewardConfig;
-import org.pokesplash.hunt.util.Utils;
 
 import java.text.DecimalFormat;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.List;
+import java.util.UUID;
 
 public class SingleHunt {
 

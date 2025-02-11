@@ -13,9 +13,9 @@ import java.util.concurrent.CompletableFuture;
  * Config file.
  */
 public class Config extends Versioned {
-	private Economy economy; // The economy mod to use. Only options are Impactor and Pebbles.
+	private Economy economy; // The economy mod to use. Options are Impactor, Pebbles, Blanket.
 	private boolean useImpactorDefaultCurrency; // Should Hunt use Impactor's default currency.
-	private String impactorCurrencyName; // The name of the currency Impactor should use.
+	private String currencyName; // The name of the currency that should be used.
 	private boolean individualHunts; // if hunts should be individual for each player.
 	private boolean sendHuntEndMessage; // Should the mod send a message when a hunt ends.
 	private boolean sendHuntBeginMessage; // Should the mod send a message when a hunt begins.
@@ -33,7 +33,7 @@ public class Config extends Versioned {
 		super(Hunt.CONFIG_VERSION);
 		economy = Economy.IMPACTOR;
 		useImpactorDefaultCurrency = true;
-		impactorCurrencyName = "impactor:huntcoins";
+		currencyName = "impactor:huntcoins";
 		individualHunts = false;
 		sendHuntEndMessage = true;
 		sendHuntBeginMessage = true;
@@ -66,7 +66,7 @@ public class Config extends Versioned {
 						huntAmount = cfg.getHuntAmount();
 					}
 					useImpactorDefaultCurrency = cfg.isUseImpactorDefaultCurrency();
-					impactorCurrencyName = cfg.getImpactorCurrencyName();
+					currencyName = cfg.getCurrencyName();
 					huntDuration = cfg.getHuntDuration();
 					individualHunts = cfg.isIndividualHunts();
 					sendHuntEndMessage = cfg.isSendHuntEndMessage();
@@ -81,7 +81,9 @@ public class Config extends Versioned {
 					economy = cfg.getEconomy();
 
 					if (!versioned.getVersion().equals(Hunt.CONFIG_VERSION)) {
+						ConfigOld cfgOld = gson.fromJson(el, ConfigOld.class);
 						economy = Economy.IMPACTOR;
+						currencyName = cfgOld.getImpactorCurrencyName();
 						write();
 					}
 
@@ -171,8 +173,8 @@ public class Config extends Versioned {
 		return useImpactorDefaultCurrency;
 	}
 
-	public String getImpactorCurrencyName() {
-		return impactorCurrencyName;
+	public String getCurrencyName() {
+		return currencyName;
 	}
 
 	public Economy getEconomy() {
