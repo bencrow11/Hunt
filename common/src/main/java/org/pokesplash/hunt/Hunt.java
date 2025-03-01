@@ -1,5 +1,6 @@
 package org.pokesplash.hunt;
 
+import com.google.common.util.concurrent.ThreadFactoryBuilder;
 import net.minecraft.server.MinecraftServer;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -16,6 +17,9 @@ import org.pokesplash.hunt.hunts.SpawnRates;
 import org.pokesplash.hunt.util.CommandsRegistry;
 import org.pokesplash.hunt.util.Permissions;
 
+import java.util.concurrent.Executors;
+import java.util.concurrent.ScheduledExecutorService;
+
 public class Hunt
 {
 	public static final String MOD_ID = "hunt";
@@ -31,6 +35,8 @@ public class Hunt
 	public static Lang language = new Lang();
 	public static final Logs logs = new Logs();
 	public static MinecraftServer server;
+	public static final ScheduledExecutorService ASYNC_EXEC = Executors.newScheduledThreadPool(2,
+			new ThreadFactoryBuilder().setNameFormat("Hunt-Thread-#%d").setDaemon(true).build());
 
 	public static void init() {
 		// Adds command to registry
@@ -46,18 +52,23 @@ public class Hunt
 		language.init();
 		broadcaster.init();
 		spawnRates.init();
-		if (!config.isIndividualHunts()) {
-			hunts.init();
-		}
 		logs.init();
-		manager.init();
+
+		ASYNC_EXEC.submit(() -> {
+			if (!config.isIndividualHunts()) {
+				hunts.init();
+			}
+			manager.init();
+		});
 	}
 
 	public static void check() {
-		if (config.isIndividualHunts()) {
-			manager.getHunts().forEach(SingleHunt::check);
-		} else {
-			hunts.getHuntValues().forEach(SingleHunt::check);
-		}
+		ASYNC_EXEC.submit(() -> {
+			if (config.isIndividualHunts()) {
+				manager.getHunts().forEach(SingleHunt::check);
+			} else {
+				hunts.getHuntValues().forEach(SingleHunt::check);
+			}
+		});
 	}
 }

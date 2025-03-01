@@ -32,11 +32,13 @@ public class HuntManager {
 	}
 
 	public void addPlayer(UUID player) {
-		if (playerHunts.get(player) == null && Hunt.config.isIndividualHunts()) {
-			CurrentHunts hunts = new CurrentHunts(player);
-			hunts.init();
-			playerHunts.put(player, hunts);
-		}
+		Hunt.ASYNC_EXEC.submit(() -> {
+			if (playerHunts.get(player) == null && Hunt.config.isIndividualHunts()) {
+				CurrentHunts hunts = new CurrentHunts(player);
+				hunts.init();
+				playerHunts.put(player, hunts);
+			}
+		});
 	}
 
 	public void init() {

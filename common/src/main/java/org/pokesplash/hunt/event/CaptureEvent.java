@@ -61,7 +61,7 @@ public abstract class CaptureEvent {
 					HuntEvents.COMPLETED.trigger(new CompletedEvent(replacedHunt.getOldHunt(), player.getUUID()));
 				}
 
-				Hunt.logs.addValue(player.getUUID(), price);
+//				Hunt.logs.addValue(player.getUUID(), price);
 
 				// Checks there's a price.
 				if (price > 0) {
