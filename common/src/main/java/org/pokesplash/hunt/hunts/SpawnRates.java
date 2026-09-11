@@ -2,7 +2,6 @@ package org.pokesplash.hunt.hunts;
 
 import com.cobblemon.mod.common.api.spawning.BestSpawner;
 import com.cobblemon.mod.common.api.spawning.CobblemonSpawnPools;
-import com.cobblemon.mod.common.api.spawning.SpawnBucket;
 import com.cobblemon.mod.common.api.spawning.detail.SpawnDetail;
 import com.cobblemon.mod.common.pokemon.Pokemon;
 
@@ -25,18 +24,31 @@ public class SpawnRates {
 
 	public void init() {
 
-		BestSpawner.INSTANCE.getConfig().getBuckets().forEach(b -> {
+		// Cobblemon 1.8 replaced the SpawnBucket object with the bucket id as a
+		// plain String, and split the single bucket list into one map per spawner
+		// (world, fishing, habitats, PokeSnack). Hunts are priced off wild world
+		// spawns, so that is the map to read.
+		BestSpawner.INSTANCE.getConfig().getWorldBuckets().forEach((name, weight) -> {
 
-			Bucket bucket = getBucket(b);
+			Bucket bucket = getBucket(name);
 
 			if (bucket != null) {
-				buckets.put(bucket, b.getWeight());
+				buckets.put(bucket, weight);
 			}
 		});
 
 		ArrayList<SpawnDetail> spawnDetails = new ArrayList<>(CobblemonSpawnPools.WORLD_SPAWN_POOL.getDetails());
 
 		spawnDetails.forEach(spawnDetail -> {
+
+			// 1.8 added a "boss" bucket for the alpha herds, which has no rarity
+			// tier here. Skipping it keeps the four tiers behaving exactly as
+			// before; without this an alpha entry would overwrite the species'
+			// real rarity with null and quietly drop it from every hunt.
+			if (getBucket(spawnDetail.getBucket()) == null) {
+				return;
+			}
+
 			if (!isRarerBucket(spawnDetail)) {
 				rarity.put(spawnDetail.getName().getString(), getBucket(spawnDetail.getBucket()));
 			}
@@ -59,8 +71,8 @@ public class SpawnRates {
 		return newWeight < oldWeight;
 	}
 
-	private Bucket getBucket(SpawnBucket spawnBucket) {
-        return switch (spawnBucket.getName()) {
+	private Bucket getBucket(String spawnBucket) {
+        return switch (spawnBucket) {
             case "common" -> Bucket.COMMON;
             case "uncommon" -> Bucket.UNCOMMON;
             case "rare" -> Bucket.RARE;
