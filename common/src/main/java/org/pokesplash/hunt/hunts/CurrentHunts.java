@@ -60,10 +60,10 @@ public class CurrentHunts {
 		// If the maximum hunt amount is reached, don't add another.
 		if (hunts.size() < Hunt.config.getHuntAmount()) {
 			SingleHunt hunt = new SingleHunt(owner);
-
 			// If a species matches, add hunt again.
 			if (species.containsValue(hunt.getPokemon().getSpecies()) ||
-			Hunt.config.blacklistContains(hunt.getPokemon().getSpecies().getName())) {
+			Hunt.config.blacklistContains(hunt.getPokemon().getSpecies().getName()) ||
+			Hunt.config.labelBlacklistContains(hunt.getPokemon())) {
 				return addHunt();
 			}
 

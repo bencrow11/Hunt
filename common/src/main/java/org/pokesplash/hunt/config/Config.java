@@ -1,5 +1,6 @@
 package org.pokesplash.hunt.config;
 
+import com.cobblemon.mod.common.pokemon.Pokemon;
 import com.google.gson.Gson;
 import org.pokesplash.hunt.Hunt;
 import org.pokesplash.hunt.enumeration.Economy;
@@ -28,6 +29,7 @@ public class Config extends Versioned {
 	private Properties matchProperties; // What properties should be checked to complete the hunt.
 	private ArrayList<CustomPrice> customPrices; // List of custom prices.
 	private ArrayList<String> blacklist; // List if Pokemon that shouldn't be added to Hunt.
+	private ArrayList<String> labelBlacklist; //List if Pokemon label that shouldn't be added to Hunt.
 
 	public Config() {
 		super(Hunt.CONFIG_VERSION);
@@ -47,6 +49,7 @@ public class Config extends Versioned {
 		customPrices = new ArrayList<>();
 		customPrices.add(new CustomPrice());
 		blacklist = new ArrayList<>();
+		labelBlacklist = new ArrayList<>();
 	}
 
 	/**
@@ -79,6 +82,7 @@ public class Config extends Versioned {
 					rarity = cfg.getRarity();
 					rewards = cfg.getRewards();
 					economy = cfg.getEconomy();
+					labelBlacklist = cfg.getLabelBlacklist();
 
 					if (!versioned.getVersion().equals(Hunt.CONFIG_VERSION)) {
 						ConfigOld cfgOld = gson.fromJson(el, ConfigOld.class);
@@ -154,6 +158,10 @@ public class Config extends Versioned {
 		return blacklist;
 	}
 
+	public ArrayList<String> getLabelBlacklist() {
+		return this.labelBlacklist;
+	}
+
 	public RarityConfig getRarity() {
 		return rarity;
 	}
@@ -165,6 +173,13 @@ public class Config extends Versioned {
 	public boolean blacklistContains(String pokemon) {
 		for (String name : blacklist) {
 			if (name.equalsIgnoreCase(pokemon)) return true;
+		}
+		return false;
+	}
+
+	public boolean labelBlacklistContains(Pokemon pokemon) {
+		for (String label : labelBlacklist) {
+			if (pokemon.hasLabels(label)) return true;
 		}
 		return false;
 	}
